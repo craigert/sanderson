@@ -15,13 +15,14 @@
     <div class="book-sheet library-sheet">
     <header class="library-header">
       <div>
-        <div class="chart-eyebrow">The collected works, catalogued</div>
+        <div class="chart-eyebrow">The collected works, catalogued &middot; {{ readCount }} of {{ books.length }} read</div>
         <h1>The Library</h1>
       </div>
       <div class="filter-toggles">
         <button :class="['filter-btn', { active: filter === 'all' }]" @click="filter = 'all'">All</button>
         <button :class="['filter-btn', { active: filter === 'cosmere' }]" @click="filter = 'cosmere'">Cosmere</button>
         <button :class="['filter-btn', { active: filter === 'non-cosmere' }]" @click="filter = 'non-cosmere'">Non-Cosmere</button>
+        <button :class="['filter-btn', { active: unreadOnly }]" @click="unreadOnly = !unreadOnly">Unread</button>
       </div>
     </header>
 
@@ -41,7 +42,7 @@
           </div>
         </div>
 
-        <router-link v-else :to="'/book/' + book.id" class="book-card">
+        <router-link v-else :to="'/book/' + book.id" :class="['book-card', { 'is-read': isRead(book.id) }]">
           <div class="book-cover-wrapper">
             <img
               v-if="!failedCovers[book.id]"
@@ -54,6 +55,13 @@
             <div v-else class="book-cover-placeholder">
               <span>{{ book.title }}</span>
             </div>
+            <button
+              class="read-toggle"
+              :class="{ read: isRead(book.id) }"
+              :aria-pressed="isRead(book.id)"
+              :title="isRead(book.id) ? 'Read — click to unmark' : 'Mark as read'"
+              @click.prevent.stop="toggleRead(book.id)"
+            >&#10003;</button>
           </div>
           <div class="book-info">
             <h3>{{ book.title }}</h3>
@@ -77,6 +85,7 @@ import { useTheme } from '../theme.js';
 import {
   openPalette, loadCatalog, isSpoiled, spoilerActive,
   books as catalogBooks, series as catalogSeries,
+  isRead, toggleRead, readCount,
 } from '../catalog.js';
 
 const { toggleTheme, themeLabel } = useTheme();
@@ -92,12 +101,15 @@ const seriesMap = computed(() =>
 const loading = ref(true);
 const error = ref(null);
 const filter = ref('all');
+const unreadOnly = ref(false);
 const failedCovers = reactive({});
 
 const filteredBooks = computed(() => {
-  if (filter.value === 'cosmere') return books.value.filter(b => b.cosmere);
-  if (filter.value === 'non-cosmere') return books.value.filter(b => !b.cosmere);
-  return books.value;
+  let list = books.value;
+  if (filter.value === 'cosmere') list = list.filter(b => b.cosmere);
+  else if (filter.value === 'non-cosmere') list = list.filter(b => !b.cosmere);
+  if (unreadOnly.value) list = list.filter(b => !isRead(b.id));
+  return list;
 });
 
 onMounted(async () => {

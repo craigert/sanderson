@@ -10,5 +10,11 @@
     // Client-side routed SPA: unknown paths fall back to index.html so deep
     // links like /book/7 and /books resolve.
     "not_found_handling": "single-page-application"
-  }
+  },
+  // Serve at the custom domain. Requires the craigboren.com zone to live in
+  // the same Cloudflare account; wrangler provisions the DNS record + cert on
+  // deploy.
+  "routes": [
+    { "pattern": "cosmere.craigboren.com", "custom_domain": true }
+  ]
 }

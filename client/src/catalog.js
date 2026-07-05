@@ -79,6 +79,23 @@ export function setSpoiler(id) {
 }
 
 export const spoilerActive = computed(() => spoilerBookId.value != null);
+
+// ── Reading log ──────────────────────────────────────────
+const readStored = (() => {
+  try { return JSON.parse(localStorage.getItem('cosmere-read-books') || '[]'); }
+  catch { return []; }
+})();
+export const readBooks = ref(readStored);
+
+export function isRead(id) {
+  return readBooks.value.includes(Number(id));
+}
+export function toggleRead(id) {
+  const n = Number(id);
+  readBooks.value = isRead(n) ? readBooks.value.filter(x => x !== n) : [...readBooks.value, n];
+  try { localStorage.setItem('cosmere-read-books', JSON.stringify(readBooks.value)); } catch { /* ignore */ }
+}
+export const readCount = computed(() => readBooks.value.length);
 export const spoilerBook = computed(() => books.value.find(b => b.id === spoilerBookId.value) || null);
 
 // A book is spoiled when it was published later than your marked furthest read.
