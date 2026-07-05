@@ -1,0 +1,13 @@
+{
+  "name": "sanderson-catalog",
+  "private": true,
+  "description": "The Worldhopper's Codex — an interactive Cosmere universe map (static PWA).",
+  "scripts": {
+    "build": "npm --prefix client install && npm --prefix client run build",
+    "deploy": "wrangler deploy",
+    "data": "node server/export-static.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

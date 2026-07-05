@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output (Cloudflare rebuilds this)
+client/dist/
+
+# Wrangler
+.wrangler/
+
+# Local Claude Code / editor / OS
+.claude/
+.claudecode/
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Logs & scratch
+*.log
+_tmp_*
+*.tmp
+*.bak
+
+# Server cover cache — regenerated; the served covers live in client/public/covers
+server/.cover-cache/

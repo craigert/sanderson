@@ -1,0 +1,14 @@
+{
+  // Cloudflare Workers + Static Assets — no Worker script, the platform serves
+  // the built Vite site directly. `npx wrangler deploy` (the command the
+  // Cloudflare dashboard runs when you connect a Git repo) reads this.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sanderson",
+  "compatibility_date": "2025-06-01",
+  "assets": {
+    "directory": "./client/dist",
+    // Client-side routed SPA: unknown paths fall back to index.html so deep
+    // links like /book/7 and /books resolve.
+    "not_found_handling": "single-page-application"
+  }
+}
