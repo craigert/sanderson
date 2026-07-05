@@ -35,9 +35,8 @@
 
         <div class="palette-footer">
           <span class="palette-status">
-            Spoiler-safe:
-            <strong>{{ spoilerBook ? 'through ' + spoilerBook.title : 'off' }}</strong>
-            <span class="palette-status-hint">&middot; follows your reading log</span>
+            Spoiler-safe: <strong>{{ readCount ? 'on' : 'off' }}</strong>
+            <span class="palette-status-hint">&middot; hides what&rsquo;s ahead in series you&rsquo;re reading</span>
           </span>
           <span class="palette-hints"><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate &middot; <kbd>&crarr;</kbd> open</span>
         </div>
@@ -49,7 +48,7 @@
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
-import { paletteOpen, closePalette, search, spoilerBook } from '../catalog.js';
+import { paletteOpen, closePalette, search, readCount } from '../catalog.js';
 
 const router = useRouter();
 const inputEl = ref(null);

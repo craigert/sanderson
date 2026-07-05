@@ -53,16 +53,6 @@ function seriesName(id) {
   return s ? s.name : '';
 }
 
-// Publication order — the basis for "how far have you read"
-const orderMap = computed(() => {
-  const sorted = [...books.value].sort(
-    (a, b) => (a.published_year - b.published_year) || (a.id - b.id)
-  );
-  const m = {};
-  sorted.forEach((bk, i) => { m[bk.id] = i; });
-  return m;
-});
-
 // ── Reading log ──────────────────────────────────────────
 const readStored = (() => {
   try { return JSON.parse(localStorage.getItem('cosmere-read-books') || '[]'); }
@@ -81,32 +71,40 @@ export function toggleRead(id) {
 export const readCount = computed(() => readBooks.value.length);
 
 // ── Spoiler-safe ─────────────────────────────────────────
-// The spoiler boundary follows your reading log automatically: it sits at the
-// furthest book (by publication order) you've marked read. Read more and it
-// moves outward; unmark and it pulls back; nothing read means no spoiler limit.
-export const spoilerBookId = computed(() => {
-  const om = orderMap.value;
+// Spoilers are scoped to each series' own reading order — progress in one
+// series (or continuity) never veils another. A book is spoiled only when it
+// comes later in ITS series than the furthest you've read there. Series whose
+// volumes are independent (the standalones) never spoil one another, and a
+// series you haven't started yet stays fully browsable.
+function seriesIsSequential(seriesId) {
+  const s = seriesById(seriesId);
+  if (!s) return false;
+  return !/standalone/i.test(s.name); // "Standalone Cosmere" volumes are independent
+}
+
+// Furthest volume (by series_order) you've read within a given series
+export function furthestReadInSeries(seriesId) {
   let best = null;
-  let bestIdx = -1;
+  let bestOrder = -Infinity;
   for (const id of readBooks.value) {
-    const idx = om[id];
-    if (idx != null && idx > bestIdx) { bestIdx = idx; best = id; }
+    const b = bookById(id);
+    if (b && b.series_id === seriesId && (b.series_order ?? -1) > bestOrder) {
+      bestOrder = b.series_order ?? -1;
+      best = b;
+    }
   }
   return best;
-});
+}
 
-export const spoilerActive = computed(() => spoilerBookId.value != null);
-export const spoilerBook = computed(() => books.value.find(b => b.id === spoilerBookId.value) || null);
+export const spoilerActive = computed(() => readBooks.value.length > 0);
 
-// A book is spoiled when it was published later than your furthest read.
 export function isSpoiled(bookOrId) {
-  if (spoilerBookId.value == null) return false;
-  const id = typeof bookOrId === 'object' && bookOrId ? bookOrId.id : bookOrId;
-  const om = orderMap.value;
-  const bi = om[id];
-  const fi = om[spoilerBookId.value];
-  if (bi == null || fi == null) return false;
-  return bi > fi;
+  const book = typeof bookOrId === 'object' && bookOrId ? bookOrId : bookById(bookOrId);
+  if (!book || book.series_order == null) return false;
+  if (!seriesIsSequential(book.series_id)) return false;
+  const furthest = furthestReadInSeries(book.series_id);
+  if (!furthest) return false; // haven't started this series → nothing to spoil
+  return book.series_order > (furthest.series_order ?? -1);
 }
 
 // ── Search ───────────────────────────────────────────────

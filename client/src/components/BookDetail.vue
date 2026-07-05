@@ -20,8 +20,9 @@
       <div class="spoiler-wall-mark" aria-hidden="true">&#10022;</div>
       <h2>Here be spoilers</h2>
       <p>
-        This volume was published after <strong>{{ spoilerBookTitle }}</strong> &mdash; the furthest
-        point you&rsquo;ve marked as read. Its characters, places, and revelations lie beyond your voyage.
+        This volume comes later in <strong>{{ seriesName }}</strong> than
+        <strong>{{ spoilerBookTitle }}</strong> &mdash; the furthest you&rsquo;ve marked read in this
+        series. Its characters, places, and revelations lie beyond your voyage.
       </p>
       <div class="spoiler-wall-actions">
         <button class="pill pill-btn" @click="revealed = true">Reveal anyway</button>
@@ -129,7 +130,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { planetForBook, booksForPlanet } from '../data/cosmere.js';
 import { useTheme } from '../theme.js';
 import {
-  openPalette, loadCatalog, isSpoiled, spoilerActive, spoilerBook,
+  openPalette, loadCatalog, isSpoiled, spoilerActive, furthestReadInSeries,
   bookDetails, seriesById, books as catalogBooks,
 } from '../catalog.js';
 
@@ -173,7 +174,11 @@ const siblings = computed(() => {
 const spoilerWall = computed(() =>
   !!book.value && spoilerActive.value && isSpoiled(book.value) && !revealed.value
 );
-const spoilerBookTitle = computed(() => spoilerBook.value?.title || 'your last read');
+const spoilerBookTitle = computed(() => {
+  if (!book.value) return 'your progress';
+  const f = furthestReadInSeries(book.value.series_id);
+  return f ? f.title : 'your progress';
+});
 
 const TYPE_LABELS = {
   city: 'City',
