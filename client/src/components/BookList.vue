@@ -31,18 +31,7 @@
 
     <div v-else class="books-grid">
       <template v-for="book in filteredBooks" :key="book.id">
-        <!-- Spoiler-veiled: past the reader's marked furthest volume -->
-        <div v-if="isVeiled(book)" class="book-card veiled" title="Beyond your marked progress">
-          <div class="book-cover-wrapper">
-            <div class="book-cover-placeholder veil-cover"><span aria-hidden="true">&#10022;</span></div>
-          </div>
-          <div class="book-info">
-            <h3 class="veil-title">Beyond your voyage</h3>
-            <p class="book-year">{{ book.published_year }}</p>
-          </div>
-        </div>
-
-        <router-link v-else :to="'/book/' + book.id" :class="['book-card', { 'is-read': isRead(book.id) }]">
+        <router-link :to="'/book/' + book.id" :class="['book-card', { 'is-read': isRead(book.id) }]">
           <div class="book-cover-wrapper">
             <img
               v-if="!failedCovers[book.id]"
@@ -83,16 +72,12 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useTheme } from '../theme.js';
 import {
-  openPalette, loadCatalog, isSpoiled, spoilerActive,
+  openPalette, loadCatalog,
   books as catalogBooks, series as catalogSeries,
   isRead, toggleRead, readCount,
 } from '../catalog.js';
 
 const { toggleTheme, themeLabel } = useTheme();
-
-function isVeiled(book) {
-  return spoilerActive.value && isSpoiled(book);
-}
 
 const books = catalogBooks;
 const seriesMap = computed(() =>

@@ -63,23 +63,6 @@ const orderMap = computed(() => {
   return m;
 });
 
-// ── Spoiler-safe ─────────────────────────────────────────
-const stored = (() => {
-  try { const v = localStorage.getItem('cosmere-spoiler-book'); return v ? Number(v) : null; }
-  catch { return null; }
-})();
-export const spoilerBookId = ref(stored);
-
-export function setSpoiler(id) {
-  spoilerBookId.value = id;
-  try {
-    if (id == null) localStorage.removeItem('cosmere-spoiler-book');
-    else localStorage.setItem('cosmere-spoiler-book', String(id));
-  } catch { /* ignore */ }
-}
-
-export const spoilerActive = computed(() => spoilerBookId.value != null);
-
 // ── Reading log ──────────────────────────────────────────
 const readStored = (() => {
   try { return JSON.parse(localStorage.getItem('cosmere-read-books') || '[]'); }
@@ -96,9 +79,26 @@ export function toggleRead(id) {
   try { localStorage.setItem('cosmere-read-books', JSON.stringify(readBooks.value)); } catch { /* ignore */ }
 }
 export const readCount = computed(() => readBooks.value.length);
+
+// ── Spoiler-safe ─────────────────────────────────────────
+// The spoiler boundary follows your reading log automatically: it sits at the
+// furthest book (by publication order) you've marked read. Read more and it
+// moves outward; unmark and it pulls back; nothing read means no spoiler limit.
+export const spoilerBookId = computed(() => {
+  const om = orderMap.value;
+  let best = null;
+  let bestIdx = -1;
+  for (const id of readBooks.value) {
+    const idx = om[id];
+    if (idx != null && idx > bestIdx) { bestIdx = idx; best = id; }
+  }
+  return best;
+});
+
+export const spoilerActive = computed(() => spoilerBookId.value != null);
 export const spoilerBook = computed(() => books.value.find(b => b.id === spoilerBookId.value) || null);
 
-// A book is spoiled when it was published later than your marked furthest read.
+// A book is spoiled when it was published later than your furthest read.
 export function isSpoiled(bookOrId) {
   if (spoilerBookId.value == null) return false;
   const id = typeof bookOrId === 'object' && bookOrId ? bookOrId.id : bookOrId;
@@ -108,11 +108,6 @@ export function isSpoiled(bookOrId) {
   if (bi == null || fi == null) return false;
   return bi > fi;
 }
-
-// Books in reading order, for the spoiler picker
-export const booksByOrder = computed(() =>
-  [...books.value].sort((a, b) => (a.published_year - b.published_year) || (a.id - b.id))
-);
 
 // ── Search ───────────────────────────────────────────────
 export function search(q) {
