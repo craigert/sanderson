@@ -51,6 +51,7 @@
               :title="isRead(book.id) ? 'Read — click to unmark' : 'Mark as read'"
               @click.prevent.stop="toggleRead(book.id)"
             >&#10003;</button>
+            <span v-if="readyToRead(book)" class="next-badge" title="Safe to read next">NEXT</span>
           </div>
           <div class="book-info">
             <h3>{{ book.title }}</h3>
@@ -74,7 +75,7 @@ import { useTheme } from '../theme.js';
 import {
   openPalette, loadCatalog,
   books as catalogBooks, series as catalogSeries,
-  isRead, toggleRead, readCount,
+  isRead, toggleRead, readCount, readyToRead,
 } from '../catalog.js';
 
 const { toggleTheme, themeLabel } = useTheme();

@@ -70,41 +70,69 @@ export function toggleRead(id) {
 }
 export const readCount = computed(() => readBooks.value.length);
 
-// ── Spoiler-safe ─────────────────────────────────────────
-// Spoilers are scoped to each series' own reading order — progress in one
-// series (or continuity) never veils another. A book is spoiled only when it
-// comes later in ITS series than the furthest you've read there. Series whose
-// volumes are independent (the standalones) never spoil one another, and a
-// series you haven't started yet stays fully browsable.
+// ── Spoiler-safe (reading-order aware) ───────────────────
+// Spoilers follow the canonical Cosmere reading order, including cross-series
+// dependencies. Every book has prerequisites — the volumes you should read
+// first — and it stays veiled until all of them are marked read. Intra-series
+// order is automatic (each volume needs the previous one in its series); the
+// map below adds the cross-series gates from the recommended order.
+const EXTRA_PREREQS = {
+  // Mistborn Era 2 opens 300 years after Era 1 — finish Era 1 first
+  'The Alloy of Law': ['The Hero of Ages'],
+  // The post-Rhythm-of-War standalones
+  'Tress of the Emerald Sea': ['Rhythm of War'],
+  'Yumi and the Nightmare Painter': ['Rhythm of War'],
+  // Far-future capstone — read late, before the newest Stormlight
+  'The Sunlit Man': ['Rhythm of War', 'The Lost Metal'],
+  'Wind and Truth': ['The Sunlit Man'],
+};
+
 function seriesIsSequential(seriesId) {
   const s = seriesById(seriesId);
   if (!s) return false;
   return !/standalone/i.test(s.name); // "Standalone Cosmere" volumes are independent
 }
 
-// Furthest volume (by series_order) you've read within a given series
-export function furthestReadInSeries(seriesId) {
-  let best = null;
-  let bestOrder = -Infinity;
-  for (const id of readBooks.value) {
-    const b = bookById(id);
-    if (b && b.series_id === seriesId && (b.series_order ?? -1) > bestOrder) {
-      bestOrder = b.series_order ?? -1;
-      best = b;
+// Direct prerequisites: the previous volume in a sequential series plus any
+// explicit cross-series gates. Chains resolve link by link (not transitive).
+export function prereqsFor(bookOrId) {
+  const book = typeof bookOrId === 'object' && bookOrId ? bookOrId : bookById(bookOrId);
+  if (!book) return [];
+  const result = [];
+  if (seriesIsSequential(book.series_id) && book.series_order != null) {
+    let prev = null;
+    for (const b of books.value) {
+      if (b.series_id === book.series_id && b.series_order != null && b.series_order < book.series_order) {
+        if (!prev || b.series_order > prev.series_order) prev = b;
+      }
     }
+    if (prev) result.push(prev);
   }
-  return best;
+  for (const title of (EXTRA_PREREQS[book.title] || [])) {
+    const b = books.value.find(x => x.title === title);
+    if (b && !result.includes(b)) result.push(b);
+  }
+  return result;
+}
+
+export function unreadPrereqs(bookOrId) {
+  return prereqsFor(bookOrId).filter(b => !isRead(b.id));
+}
+
+// Safe to pick up next: unread, with every prerequisite already read
+export function readyToRead(bookOrId) {
+  const book = typeof bookOrId === 'object' && bookOrId ? bookOrId : bookById(bookOrId);
+  if (!book || isRead(book.id)) return false;
+  return unreadPrereqs(book).length === 0;
 }
 
 export const spoilerActive = computed(() => readBooks.value.length > 0);
 
 export function isSpoiled(bookOrId) {
+  if (readBooks.value.length === 0) return false; // no opt-in until you log a read
   const book = typeof bookOrId === 'object' && bookOrId ? bookOrId : bookById(bookOrId);
-  if (!book || book.series_order == null) return false;
-  if (!seriesIsSequential(book.series_id)) return false;
-  const furthest = furthestReadInSeries(book.series_id);
-  if (!furthest) return false; // haven't started this series → nothing to spoil
-  return book.series_order > (furthest.series_order ?? -1);
+  if (!book || isRead(book.id)) return false;
+  return unreadPrereqs(book).length > 0;
 }
 
 // ── Search ───────────────────────────────────────────────
