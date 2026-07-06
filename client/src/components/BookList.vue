@@ -57,7 +57,7 @@
             <h3>{{ book.title }}</h3>
             <p v-if="seriesMap[book.series_id]" class="book-series">
               {{ seriesMap[book.series_id] }}
-              <span v-if="book.series_order"> &middot; Book {{ book.series_order }}</span>
+              <span v-if="book.series_order"> &middot; {{ volLabel(book) }}</span>
             </p>
             <p class="book-year">{{ book.published_year }}</p>
             <span v-if="book.cosmere" class="cosmere-badge">COSMERE</span>
@@ -79,6 +79,10 @@ import {
 } from '../catalog.js';
 
 const { toggleTheme, themeLabel } = useTheme();
+
+function volLabel(book) {
+  return Number.isInteger(book.series_order) ? 'Book ' + book.series_order : 'Novella';
+}
 
 const books = catalogBooks;
 const seriesMap = computed(() =>

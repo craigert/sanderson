@@ -282,21 +282,26 @@
       </svg>
 
       <!-- Map key: the outlying universes charted beyond the Cosmere -->
-      <div class="chart-key">
-        <div class="key-title">Key &middot; Beyond the Cosmere</div>
-        <button
-          v-for="p in otherWorlds"
-          :key="p.id"
-          class="key-entry"
-          @click="openWorld(p)"
-          :title="`Chart ${p.name}`"
-        >
-          <span class="key-swatch" :style="{ background: p.colors.base }"></span>
-          <span class="key-text">
-            <span class="key-name">{{ p.name }}</span>
-            <span class="key-region">{{ keySub(p) }}</span>
-          </span>
+      <div class="chart-key" :class="{ collapsed: !keyOpen }">
+        <button class="key-title" :aria-expanded="keyOpen" @click="keyOpen = !keyOpen">
+          <span class="key-caret" aria-hidden="true">{{ keyOpen ? '▾' : '▸' }}</span>
+          Key &middot; Beyond the Cosmere
         </button>
+        <div v-show="keyOpen" class="key-entries">
+          <button
+            v-for="p in otherWorlds"
+            :key="p.id"
+            class="key-entry"
+            @click="openWorld(p)"
+            :title="`Chart ${p.name}`"
+          >
+            <span class="key-swatch" :style="{ background: p.colors.base }"></span>
+            <span class="key-text">
+              <span class="key-name">{{ p.name }}</span>
+              <span class="key-region">{{ keySub(p) }}</span>
+            </span>
+          </button>
+        </div>
       </div>
 
       <div class="chart-zoom" role="group" aria-label="Zoom controls">
@@ -323,7 +328,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import WorldSpread from './WorldSpread.vue';
 import { PLANETS, CONNECTIONS, SECRET_WORLD, planetsFor, planetById, booksForPlanet } from '../data/cosmere.js';
@@ -409,6 +414,8 @@ const totalWorlds = computed(() => PLANETS.length + (secretUnlocked.value ? 1 : 
 const selected = ref(null);
 const hoverRoute = ref(null);
 const hoverId = ref(null);
+const keyOpen = ref(localStorage.getItem('cosmere-key-open') !== '0');
+watch(keyOpen, v => { try { localStorage.setItem('cosmere-key-open', v ? '1' : '0'); } catch {} });
 const allBooks = catalogBooks; // shared catalog store
 const seriesMap = computed(() =>
   Object.fromEntries(catalogSeries.value.map(s => [s.id, s.name]))

@@ -79,6 +79,9 @@ export const readCount = computed(() => readBooks.value.length);
 const EXTRA_PREREQS = {
   // Mistborn Era 2 opens 300 years after Era 1 — finish Era 1 first
   'The Alloy of Law': ['The Hero of Ages'],
+  // Secret History pulls the curtain back — read after Oathbringer (its intra
+  // prerequisite, The Hero of Ages, is added automatically)
+  'Mistborn: Secret History': ['Oathbringer'],
   // The post-Rhythm-of-War standalones
   'Tress of the Emerald Sea': ['Rhythm of War'],
   'Yumi and the Nightmare Painter': ['Rhythm of War'],

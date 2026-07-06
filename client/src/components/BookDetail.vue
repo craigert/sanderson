@@ -51,7 +51,7 @@
               <span class="chip-dot" :style="{ background: glow }"></span>{{ planet.name }}
             </router-link>
             <span v-if="seriesName" class="chip">
-              {{ seriesName }}<template v-if="book.series_order"> &middot; Book {{ book.series_order }}</template>
+              {{ seriesName }}<template v-if="book.series_order"> &middot; {{ volLabel }}</template>
             </span>
             <span v-if="book.published_year" class="chip">{{ book.published_year }}</span>
             <span v-if="book.cosmere" class="chip chip-cosmere">COSMERE</span>
@@ -174,6 +174,11 @@ const siblings = computed(() => {
 const spoilerWall = computed(() =>
   !!book.value && spoilerActive.value && isSpoiled(book.value) && !revealed.value
 );
+const volLabel = computed(() => {
+  const o = book.value?.series_order;
+  return Number.isInteger(o) ? 'Book ' + o : 'Novella';
+});
+
 const neededTitles = computed(() => {
   if (!book.value) return '';
   const titles = unreadPrereqs(book.value).map(b => b.title);

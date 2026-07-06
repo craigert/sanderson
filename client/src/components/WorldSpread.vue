@@ -111,7 +111,8 @@ const sortedBooks = computed(() =>
 
 function bookMeta(book) {
   const series = (props.seriesMap[book.series_id] || 'Standalone').toUpperCase();
-  const vol = book.series_order ? ` · VOL. ${book.series_order}` : '';
+  let vol = '';
+  if (book.series_order) vol = Number.isInteger(book.series_order) ? ` · VOL. ${book.series_order}` : ' · NOVELLA';
   return `${series}${vol} · ${book.published_year}`;
 }
 </script>

@@ -34,6 +34,11 @@ npm run data                # from the repo root — writes catalog.json + cover
 `npm run data` runs `server/export-static.js`, which reads `server/catalog.db`
 and writes `client/public/data/catalog.json` plus `client/public/covers/<id>.jpg`.
 
+The Cosmere novellas (Edgedancer, Dawnshard, The Emperor's Soul, Mistborn:
+Secret History) are added on top of the base seed by `node server/add-novellas.js`
+(idempotent; fetches covers where available). Run it once against the DB, then
+`npm run data`.
+
 ## Deploy (Cloudflare Workers + Static Assets)
 
 Config lives in [`wrangler.jsonc`](./wrangler.jsonc); the built site is served

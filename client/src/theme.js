@@ -8,6 +8,7 @@ export function useTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light';
     localStorage.setItem('cosmere-codex-theme', theme.value);
   }
-  const themeLabel = computed(() => (theme.value === 'light' ? 'NIGHT CHART' : 'DAY CHART'));
+  // Dark theme is "Shadesmar" (the Cognitive Realm); light is the day chart
+  const themeLabel = computed(() => (theme.value === 'light' ? 'SHADESMAR' : 'DAY CHART'));
   return { theme, toggleTheme, themeLabel };
 }
