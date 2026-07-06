@@ -1,6 +1,6 @@
 // Service worker for the Sanderson Catalog PWA.
 // Bump CACHE_VERSION to invalidate all caches on deploy.
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const SHELL_CACHE = `shell-${CACHE_VERSION}`;
 const ASSET_CACHE = `assets-${CACHE_VERSION}`;
 const API_CACHE = `api-${CACHE_VERSION}`;
