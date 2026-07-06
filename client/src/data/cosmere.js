@@ -187,6 +187,61 @@ export const PLANETS = [
     seriesIds: [],
     lore: true,
   },
+  {
+    id: 'first-of-the-sun',
+    universe: 'cosmere',
+    name: 'First of the Sun',
+    system: 'The Drominad System',
+    tagline: 'Islands of deadly instinct, where the Aviar grant strange gifts',
+    description:
+      'An archipelago world of lush, lethal jungles whose predators hunt by sensing thought itself. Its people bond with Aviar — birds that grant talents like hiding one\'s mind or glimpsing moments of the future. Beyond the isles, out in the dark, the Emberdark stirs.',
+    x: -520, y: 640, r: 32,
+    colors: { base: '#1f8a6a', mid: '#2fb389', glow: '#5fe0b0', accent: '#ffd88a' },
+    shards: [
+      { name: 'Autonomy', note: 'Present as the avatar Patji, the deadly father-island' },
+    ],
+    magic: [
+      { name: 'The Aviar', blurb: 'Bonded birds grant talents — hiding a person\'s mind from predators, or Sak\'s gift of seeing moments before death.' },
+    ],
+    seriesIds: [10],
+    bookTitles: ['The Isles of the Emberdark', 'Sixth of the Dusk'],
+  },
+  {
+    id: 'threnody',
+    universe: 'cosmere',
+    name: 'Threnody',
+    system: 'The Threnody System',
+    tagline: 'Light the wrong fire and the Shades will take you',
+    description:
+      'A haunted frontier world where the dead linger as Shades. Break the Simple Rules — kindle no flame, shed no blood, run not at night — and only silver stands between you and a cold death in the Forests of Hell.',
+    x: -380, y: 1120, r: 30,
+    colors: { base: '#3a4a5a', mid: '#556878', glow: '#8fb0c8', accent: '#dfe8f0' },
+    shards: [],
+    magic: [
+      { name: 'The Shades', blurb: 'The vengeful dead, held at bay by silver and by obedience to the Simple Rules. Investiture here wears the face of death.' },
+    ],
+    seriesIds: [10],
+    bookTitles: ['Shadows for Silence in the Forests of Hell'],
+  },
+  {
+    id: 'taldain',
+    universe: 'cosmere',
+    name: 'Taldain',
+    system: 'The Taldain System',
+    tagline: 'Under an unblinking white sun, the sand comes alive',
+    description:
+      'A tidally locked world split between the blazing Dayside and the frozen Darkside. On the white sands, Sand Masters raise ribbons of living sand with water and will — power that can master a battlefield or burn a person to ash.',
+    x: 300, y: -640, r: 32,
+    colors: { base: '#b8863a', mid: '#d4a24a', glow: '#ffd870', accent: '#fff2c0' },
+    shards: [
+      { name: 'Autonomy', note: 'Taldain is the home of the Shard Autonomy (Bavadin)' },
+    ],
+    magic: [
+      { name: 'Sand Mastery', blurb: 'Command ribbons of white sand, fuelling the Investiture with water — overmaster it and it will drain you to death.' },
+    ],
+    seriesIds: [10],
+    bookTitles: ['White Sand'],
+  },
 
   // ─── Beyond the Cosmere ────────────────────────────────
   {
@@ -285,6 +340,8 @@ export const CONNECTIONS = [
   { from: 'roshar', to: 'canticle', label: 'Sigzil, the Sunlit Man', curve: 50 },
   { from: 'roshar', to: 'komashi', label: 'Design, a wandering Cryptic', curve: -40 },
   { from: 'roshar', to: 'lumar', label: 'Hoid, cursed by the Sorceress', curve: 60 },
+  { from: 'scadrial', to: 'first-of-the-sun', label: 'The Ghostbloods hunt the Aviar', curve: -90 },
+  { from: 'scadrial', to: 'taldain', label: 'Autonomy\'s designs span worlds', curve: 80 },
 ];
 
 export function planetsFor(universeId) {

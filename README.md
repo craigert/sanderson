@@ -34,10 +34,17 @@ npm run data                # from the repo root — writes catalog.json + cover
 `npm run data` runs `server/export-static.js`, which reads `server/catalog.db`
 and writes `client/public/data/catalog.json` plus `client/public/covers/<id>.jpg`.
 
-The Cosmere novellas (Edgedancer, Dawnshard, The Emperor's Soul, Mistborn:
-Secret History) are added on top of the base seed by `node server/add-novellas.js`
-(idempotent; fetches covers where available). Run it once against the DB, then
-`npm run data`.
+The Cosmere short works are added on top of the base seed by two idempotent
+scripts (they fetch covers where available):
+
+- `node server/add-novellas.js` — Edgedancer, Dawnshard, The Emperor's Soul,
+  Mistborn: Secret History
+- `node server/add-extras.js` — The Isles of the Emberdark, Sixth of the Dusk,
+  Shadows for Silence in the Forests of Hell, White Sand, The Hope of Elantris,
+  The Eleventh Metal, Allomancer Jak and the Pits of Eltania
+
+Run them once against the DB, then `npm run data`. New worlds (First of the Sun,
+Threnody, Taldain) live in `client/src/data/cosmere.js`.
 
 ## Deploy (Cloudflare Workers + Static Assets)
 

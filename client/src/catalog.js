@@ -88,6 +88,8 @@ const EXTRA_PREREQS = {
   // Far-future capstone — read late, before the newest Stormlight
   'The Sunlit Man': ['Rhythm of War', 'The Lost Metal'],
   'Wind and Truth': ['The Sunlit Man'],
+  // Recent crossover novel — deep worldhopper spoilers
+  'The Isles of the Emberdark': ['Rhythm of War'],
 };
 
 function seriesIsSequential(seriesId) {
