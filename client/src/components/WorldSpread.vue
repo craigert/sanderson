@@ -64,7 +64,9 @@
               />
               <div v-else class="spread-book-cover tint" :style="{ background: planet.colors.base }"></div>
               <div class="spread-book-text">
-                <span class="spread-book-title">{{ book.title }}</span>
+                <span class="spread-book-title">
+                  {{ book.title }}<span v-if="isNew(book)" class="spread-new">NEW</span>
+                </span>
                 <span class="spread-book-meta">{{ bookMeta(book) }}</span>
               </div>
               <span class="spread-book-arrow" aria-hidden="true">&rarr;</span>
@@ -81,7 +83,7 @@
 
 <script setup>
 import { computed, reactive, ref, onMounted } from 'vue';
-import { isSpoiled, spoilerActive } from '../catalog.js';
+import { isSpoiled, spoilerActive, isNewBook, markSeen } from '../catalog.js';
 
 function veiled(book) {
   return spoilerActive.value && isSpoiled(book);
@@ -99,8 +101,20 @@ defineEmits(['close', 'toggle-visited']);
 const spreadEl = ref(null);
 const failedCovers = reactive({});
 
+// Snapshot which books were new when this spread opened, so the NEW tags stay
+// put for this viewing, then mark them seen (clearing the map bubble).
+const newIds = ref(new Set());
+function isNew(book) {
+  return newIds.value.has(book.id);
+}
+
 onMounted(() => {
   spreadEl.value?.focus();
+  const fresh = props.books.filter(b => isNewBook(b.id)).map(b => b.id);
+  if (fresh.length) {
+    newIds.value = new Set(fresh);
+    markSeen(fresh);
+  }
 });
 
 const sortedBooks = computed(() =>

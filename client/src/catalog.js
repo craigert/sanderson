@@ -26,6 +26,7 @@ export function loadCatalog() {
       places.value = data.places || [];
       details.value = data.details || {};
       loaded = true;
+      seedKnownIfNeeded();
     })
     .catch(() => { /* offline first load: search still covers static worlds & magic */ })
     .finally(() => { loading = null; });
@@ -69,6 +70,36 @@ export function toggleRead(id) {
   try { localStorage.setItem('cosmere-read-books', JSON.stringify(readBooks.value)); } catch { /* ignore */ }
 }
 export const readCount = computed(() => readBooks.value.length);
+
+// ── New-arrival tracking ─────────────────────────────────
+// Remember which books the reader has already seen. On first ever load we seed
+// this with the entire current catalog, so nothing reads as "new"; books added
+// in a later deploy then light up as new arrivals on their world.
+const knownStored = (() => {
+  try { const v = localStorage.getItem('cosmere-known-books'); return v ? JSON.parse(v) : null; }
+  catch { return null; }
+})();
+export const knownBooks = ref(knownStored || []);
+let knownSeeded = knownStored != null;
+
+function persistKnown() {
+  try { localStorage.setItem('cosmere-known-books', JSON.stringify(knownBooks.value)); } catch { /* ignore */ }
+}
+function seedKnownIfNeeded() {
+  if (knownSeeded || !books.value.length) return;
+  knownBooks.value = books.value.map(b => b.id);
+  knownSeeded = true;
+  persistKnown();
+}
+export function isNewBook(id) {
+  return knownSeeded && !knownBooks.value.includes(Number(id));
+}
+export function markSeen(ids) {
+  const set = new Set(knownBooks.value);
+  let changed = false;
+  for (const id of ids) { if (!set.has(id)) { set.add(id); changed = true; } }
+  if (changed) { knownBooks.value = [...set]; persistKnown(); }
+}
 
 // ── Spoiler-safe (reading-order aware) ───────────────────
 // Spoilers follow the canonical Cosmere reading order, including cross-series

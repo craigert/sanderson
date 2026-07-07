@@ -1022,6 +1022,37 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
+// New-arrival bubble on a stamped world
+.world-new {
+  pointer-events: none;
+
+  .world-new-dot {
+    fill: var(--seal);
+    stroke: var(--paper-hi);
+    stroke-width: 1.5;
+  }
+
+  .world-new-pulse {
+    fill: var(--seal);
+    opacity: 0.55;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: newPulse 1.8s ease-out infinite;
+  }
+
+  text {
+    font-family: $mono;
+    font-size: 10px;
+    font-weight: 700;
+    fill: #fff8e4;
+  }
+}
+
+@keyframes newPulse {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
 .world-name {
   font-family: $serif;
   font-size: 24px;
@@ -1382,6 +1413,20 @@ a { color: inherit; text-decoration: none; }
     font-weight: 600;
     color: var(--ink);
     line-height: 1.2;
+  }
+
+  .spread-new {
+    display: inline-block;
+    margin-left: 7px;
+    font-family: $mono;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #fff8e4;
+    background: var(--seal);
+    padding: 1px 5px;
+    border-radius: 4px;
+    vertical-align: middle;
   }
 
   .spread-book-meta {
@@ -1928,6 +1973,7 @@ a { color: inherit; text-decoration: none; }
   .life-aon .aon-stroke { animation: none !important; stroke-dashoffset: 0 !important; opacity: 0.5 !important; }
   .life-spirits .spirit { animation: none !important; opacity: 0 !important; }
   .hoid-halo { animation: none !important; opacity: 0.16 !important; }
+  .world-new-pulse { animation: none !important; opacity: 0 !important; }
   .spread { animation: none !important; }
   .book-page { animation: none !important; }
   html { scroll-behavior: auto; }

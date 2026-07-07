@@ -229,6 +229,13 @@
             </g>
             <text :y="w.labelY" text-anchor="middle" class="world-name">{{ w.name }}</text>
             <text :y="w.subY" text-anchor="middle" class="world-sub">{{ w.sub }}</text>
+
+            <!-- New-arrival bubble: a stamped world gained an unseen book -->
+            <g v-if="isVisited(w.id) && w.newCount" class="world-new" :transform="`translate(${w.newBadgeX} ${w.newBadgeY})`">
+              <circle class="world-new-pulse" r="9" />
+              <circle class="world-new-dot" r="8" />
+              <text y="3" text-anchor="middle">{{ w.newCount }}</text>
+            </g>
           </g>
 
           <!-- Easter egg: Hoid, hidden somewhere on the chart this session -->
@@ -333,7 +340,7 @@ import { useRoute } from 'vue-router';
 import WorldSpread from './WorldSpread.vue';
 import { PLANETS, CONNECTIONS, SECRET_WORLD, planetsFor, planetById, booksForPlanet } from '../data/cosmere.js';
 import { useTheme } from '../theme.js';
-import { openPalette, loadCatalog, books as catalogBooks, series as catalogSeries } from '../catalog.js';
+import { openPalette, loadCatalog, books as catalogBooks, series as catalogSeries, isNewBook } from '../catalog.js';
 import { soundEnabled, toggleSound, playStamp, playChime } from '../sound.js';
 import { hoidSpot, hoidFound, findHoid, secretUnlocked } from '../eggs.js';
 
@@ -584,6 +591,7 @@ function toNode(p) {
     };
   });
   const orbits = [...new Set((p.moons || []).map(m => +(m.dist * r).toFixed(1)))];
+  const newCount = booksForPlanet(p, allBooks.value).filter(b => isNewBook(b.id)).length;
   return {
     id: p.id,
     planet: p,
@@ -591,6 +599,8 @@ function toNode(p) {
     tagline: p.tagline,
     x: p.x, y: p.y,
     r, rMid: r + 6, rOuter: r + 11, stampR: r + 16,
+    newBadgeX: r * 0.72, newBadgeY: -r * 0.72,
+    newCount,
     fill: p.colors.base,
     glow: p.colors.glow,
     moons,
