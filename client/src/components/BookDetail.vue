@@ -8,7 +8,10 @@
         <a href="#" class="back-link" @click.prevent="goBack">&larr; Back</a>
       </div>
       <div class="topbar-actions">
-        <button class="pill pill-btn palette-launch" @click="openPalette">&#9906; <kbd>⌘K</kbd></button>
+        <button class="pill pill-btn palette-launch" @click="openPalette">
+          <svg class="ico-search" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.6" fill="none" stroke="currentColor" stroke-width="1.7" /><line x1="10.2" y1="10.2" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+          <kbd>⌘K</kbd>
+        </button>
         <button class="pill pill-btn" @click="toggleTheme">{{ themeLabel }}</button>
       </div>
     </div>
@@ -62,53 +65,62 @@
         </div>
       </header>
 
-      <!-- ── Section chips ── -->
-      <nav class="section-chips" aria-label="Book sections">
-        <a v-if="characters.length" href="#characters" class="section-chip">CHARACTERS <span>{{ characters.length }}</span></a>
-        <a v-if="magic.length" href="#magic" class="section-chip">MAGIC &amp; POWERS <span>{{ magic.length }}</span></a>
-        <a v-if="places.length" href="#places" class="section-chip">PLACES <span>{{ places.length }}</span></a>
-      </nav>
+      <!-- ── Collapsible codex details (kept folded to avoid spoilers) ── -->
+      <button
+        v-if="characters.length || magic.length || places.length"
+        class="detail-reveal"
+        :aria-expanded="detailsOpen"
+        @click="toggleDetails"
+      >
+        <span class="detail-reveal-caret" aria-hidden="true">{{ detailsOpen ? '▾' : '▸' }}</span>
+        {{ detailsOpen ? 'Hide codex details' : 'Reveal codex details' }}
+        <span class="detail-reveal-note">
+          characters &middot; magic &middot; places<template v-if="!detailsOpen"> — may contain spoilers</template>
+        </span>
+      </button>
 
-      <!-- ── Characters ── -->
-      <section v-if="characters.length" id="characters" class="page-section">
-        <h2>Dramatis Personae</h2>
-        <div class="section-rule"></div>
-        <div class="page-grid">
-          <article v-for="char in characters" :key="char.id" class="page-card character-card">
-            <div class="character-initial" :style="{ background: tint }" aria-hidden="true">{{ char.name.charAt(0) }}</div>
-            <div>
-              <div class="card-title">{{ char.name }}</div>
-              <div class="card-body" v-if="char.description">{{ char.description }}</div>
-            </div>
-          </article>
-        </div>
-      </section>
+      <div v-if="detailsOpen" class="detail-sections">
+        <!-- ── Characters ── -->
+        <section v-if="characters.length" class="page-section">
+          <h2>Dramatis Personae</h2>
+          <div class="section-rule"></div>
+          <div class="page-grid">
+            <article v-for="char in characters" :key="char.id" class="page-card character-card">
+              <div class="character-initial" :style="{ background: tint }" aria-hidden="true">{{ char.name.charAt(0) }}</div>
+              <div>
+                <div class="card-title">{{ char.name }}</div>
+                <div class="card-body" v-if="char.description">{{ char.description }}</div>
+              </div>
+            </article>
+          </div>
+        </section>
 
-      <!-- ── Magic ── -->
-      <section v-if="magic.length" id="magic" class="page-section">
-        <h2>Magic &amp; Powers</h2>
-        <p v-if="planet" class="section-sub">The powers at work on {{ planet.name }}</p>
-        <div class="section-rule"></div>
-        <div class="page-grid">
-          <article v-for="m in magic" :key="m.name" class="page-card magic-card" :style="{ borderLeftColor: glow }">
-            <div class="card-title">{{ m.name }}</div>
-            <div class="card-body">{{ m.blurb }}</div>
-          </article>
-        </div>
-      </section>
+        <!-- ── Magic (world-level context, not necessarily all in this book) ── -->
+        <section v-if="magic.length" class="page-section">
+          <h2>Magic of {{ planet ? planet.name : 'this World' }}</h2>
+          <p class="section-sub">The world&rsquo;s magic systems &mdash; not every one appears in this volume.</p>
+          <div class="section-rule"></div>
+          <div class="page-grid">
+            <article v-for="m in magic" :key="m.name" class="page-card magic-card" :style="{ borderLeftColor: glow }">
+              <div class="card-title">{{ m.name }}</div>
+              <div class="card-body">{{ m.blurb }}</div>
+            </article>
+          </div>
+        </section>
 
-      <!-- ── Places ── -->
-      <section v-if="places.length" id="places" class="page-section">
-        <h2>Notable Places</h2>
-        <div class="section-rule"></div>
-        <div class="page-grid">
-          <article v-for="place in places" :key="place.id" class="page-card">
-            <div v-if="place.type" class="place-type">{{ typeLabel(place.type) }}</div>
-            <div class="card-title">{{ place.name }}</div>
-            <div class="card-body" v-if="place.description">{{ place.description }}</div>
-          </article>
-        </div>
-      </section>
+        <!-- ── Places ── -->
+        <section v-if="places.length" class="page-section">
+          <h2>Notable Places</h2>
+          <div class="section-rule"></div>
+          <div class="page-grid">
+            <article v-for="place in places" :key="place.id" class="page-card">
+              <div v-if="place.type" class="place-type">{{ typeLabel(place.type) }}</div>
+              <div class="card-title">{{ place.name }}</div>
+              <div class="card-body" v-if="place.description">{{ place.description }}</div>
+            </article>
+          </div>
+        </section>
+      </div>
 
       <!-- ── Also charted on this world ── -->
       <section v-if="siblings.length && planet" class="page-section siblings-section">
@@ -140,6 +152,13 @@ const router = useRouter();
 
 // Spoiler interstitial: revealed per-book for this session only
 const revealed = ref(false);
+
+// Codex details stay folded by default to avoid spoilers; remember the choice
+const detailsOpen = ref(localStorage.getItem('cosmere-details-open') === '1');
+function toggleDetails() {
+  detailsOpen.value = !detailsOpen.value;
+  try { localStorage.setItem('cosmere-details-open', detailsOpen.value ? '1' : '0'); } catch { /* ignore */ }
+}
 
 const book = ref(null);
 const characters = ref([]);

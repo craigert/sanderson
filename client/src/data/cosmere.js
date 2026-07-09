@@ -25,7 +25,7 @@ export const PLANETS = [
     tagline: 'A storm-scoured world of spren, oaths, and ancient betrayals',
     description:
       'Ravaged by the cyclical highstorms, life on Roshar has evolved shells and stone. Here the Knights Radiant once rode, spren walk between realms, and the war between Honor and Odium spans millennia.',
-    x: 950, y: 420, r: 58,
+    x: 900, y: 430, r: 58,
     colors: { base: '#2e6fb3', mid: '#3f8fd4', glow: '#5fb0ff', accent: '#8fd0ff' },
     moons: [
       { name: 'Salas', color: '#8a5fc4', angle: -35, dist: 1.75, r: 7 },
@@ -52,7 +52,7 @@ export const PLANETS = [
     tagline: 'A world of ash and mist, remade by the powers of metal',
     description:
       'Twice reshaped by gods, Scadrial is home to the Metallic Arts. From the ashfalls of the Final Empire to the skyscrapers and six-shooters of Elendel, its people burn metal to fuel extraordinary power.',
-    x: 430, y: 520, r: 48,
+    x: 470, y: 560, r: 48,
     colors: { base: '#8a4a2c', mid: '#b0603a', glow: '#e08050', accent: '#ffb080' },
     shards: [
       { name: 'Preservation', note: 'Gave of himself to imprison Ruin' },
@@ -74,7 +74,7 @@ export const PLANETS = [
     tagline: 'Where magic is written into the land itself',
     description:
       'On Sel, Investiture is bound to place and form — Aons drawn in the air, souls rewritten with stamps, bones warped by monks. The fall of Elantris broke its greatest magic overnight.',
-    x: 300, y: 240, r: 44,
+    x: 380, y: 250, r: 44,
     colors: { base: '#8f8a3a', mid: '#b3ad4a', glow: '#e0d86a', accent: '#fff2a0' },
     shards: [
       { name: 'Devotion', note: 'Splintered by Odium; her power became the Dor' },
@@ -95,7 +95,7 @@ export const PLANETS = [
     tagline: 'A world painted in Breath and color',
     description:
       'Every person on Nalthis is born with a Breath — a fragment of Investiture that can be given away, hoarded, or used to Awaken objects to life. Its gods are the Returned, dead heroes granted a second chance.',
-    x: 700, y: 760, r: 40,
+    x: 760, y: 730, r: 40,
     colors: { base: '#6a3a8f', mid: '#8a4ab3', glow: '#b06ae0', accent: '#e0a0ff' },
     shards: [
       { name: 'Endowment', note: 'Grants Breath to all, and Returns the worthy dead' },
@@ -114,7 +114,7 @@ export const PLANETS = [
     tagline: 'Twelve seas of spores beneath twelve moons',
     description:
       'Lumar\'s oceans are not water but aether spores that rain from its moons — emerald vines, crimson spikes, midnight shadows. Sailors cross them the way others cross the waves, and pray they stay dry.',
-    x: 1280, y: 230, r: 34,
+    x: 1180, y: 300, r: 34,
     colors: { base: '#2c8a5a', mid: '#3ab374', glow: '#5ae094', accent: '#a0ffc8' },
     // Lumar has twelve moons, each raining a different aether-spore sea; a few
     // are drawn to suggest the crowded sky.
@@ -141,7 +141,7 @@ export const PLANETS = [
     tagline: 'Spirits of stone and cities wrapped in night',
     description:
       'A world split between sun-drenched Torio, where yoki-hijo summon spirits with sacred art, and the neon-dark city of Kilahito, where painters hold back living nightmares with ink and light.',
-    x: 1310, y: 640, r: 32,
+    x: 1230, y: 640, r: 32,
     colors: { base: '#b34a6a', mid: '#d46a8a', glow: '#ff8aaa', accent: '#ffc0d0' },
     shards: [
       { name: 'Virtuosity', note: 'Splintered herself here, leaving her Investiture behind' },
@@ -161,7 +161,7 @@ export const PLANETS = [
     tagline: 'Outrun the sunrise or burn',
     description:
       'A tidally-broken world where the sunlit side melts stone. Civilization survives in mobile cities racing the dawn, mining sunhearts from the corpses of the light — and one exhausted worldhopper just crash-landed.',
-    x: 1050, y: 840, r: 30,
+    x: 980, y: 820, r: 30,
     colors: { base: '#b3702c', mid: '#d48a3a', glow: '#ffaa4a', accent: '#ffd090' },
     shards: [],
     magic: [
@@ -178,7 +178,7 @@ export const PLANETS = [
     tagline: 'Where it all began',
     description:
       'The lost homeworld of Hoid, of dragons, and of Adonalsium itself — the god whose Shattering created the sixteen Shards. Almost nothing is known of it. Almost no one has been back.',
-    x: 720, y: 120, r: 22,
+    x: 700, y: 140, r: 22,
     colors: { base: '#5a6a7a', mid: '#7a8a9a', glow: '#a0b8cc', accent: '#d0e0f0' },
     shards: [],
     magic: [
@@ -195,7 +195,7 @@ export const PLANETS = [
     tagline: 'Islands of deadly instinct, where the Aviar grant strange gifts',
     description:
       'An archipelago world of lush, lethal jungles whose predators hunt by sensing thought itself. Its people bond with Aviar — birds that grant talents like hiding one\'s mind or glimpsing moments of the future. Beyond the isles, out in the dark, the Emberdark stirs.',
-    x: -520, y: 640, r: 32,
+    x: 200, y: 560, r: 32,
     colors: { base: '#1f8a6a', mid: '#2fb389', glow: '#5fe0b0', accent: '#ffd88a' },
     shards: [
       { name: 'Autonomy', note: 'Present as the avatar Patji, the deadly father-island' },
@@ -214,7 +214,7 @@ export const PLANETS = [
     tagline: 'Light the wrong fire and the Shades will take you',
     description:
       'A haunted frontier world where the dead linger as Shades. Break the Simple Rules — kindle no flame, shed no blood, run not at night — and only silver stands between you and a cold death in the Forests of Hell.',
-    x: -380, y: 1120, r: 30,
+    x: 320, y: 830, r: 30,
     colors: { base: '#3a4a5a', mid: '#556878', glow: '#8fb0c8', accent: '#dfe8f0' },
     shards: [],
     magic: [
@@ -231,7 +231,7 @@ export const PLANETS = [
     tagline: 'Under an unblinking white sun, the sand comes alive',
     description:
       'A tidally locked world split between the blazing Dayside and the frozen Darkside. On the white sands, Sand Masters raise ribbons of living sand with water and will — power that can master a battlefield or burn a person to ash.',
-    x: 300, y: -640, r: 32,
+    x: 560, y: 160, r: 32,
     colors: { base: '#b8863a', mid: '#d4a24a', glow: '#ffd870', accent: '#fff2c0' },
     shards: [
       { name: 'Autonomy', note: 'Taldain is the home of the Shard Autonomy (Bavadin)' },
@@ -252,7 +252,7 @@ export const PLANETS = [
     tagline: 'Humanity\'s last cage among the stars',
     description:
       'A junk-shrouded planet wrapped in ancient defense platforms, where the remnants of humanity hide underground from the Krell — and one girl with a talking ship refuses to stay grounded.',
-    x: 1980, y: 260, r: 46,
+    x: 300, y: 1250, r: 46,
     colors: { base: '#3a6a8a', mid: '#4a86aa', glow: '#6ab0dd', accent: '#a0d8ff' },
     shards: [],
     magic: [
@@ -268,7 +268,7 @@ export const PLANETS = [
     tagline: 'When the sky gave ordinary people terrible power',
     description:
       'After Calamity rose, Epics reshaped Earth into fiefdoms of steel and fear. In the transformed ruins of Chicago, a crew of ordinary humans hunts gods for a living.',
-    x: 1980, y: 760, r: 44,
+    x: 720, y: 1300, r: 44,
     colors: { base: '#6a6a72', mid: '#8a8a94', glow: '#b0b0c0', accent: '#e0e0ea' },
     shards: [],
     magic: [
@@ -284,7 +284,7 @@ export const PLANETS = [
     tagline: 'Chalk lines between life and death',
     description:
       'An alternate gearpunk United Isles where Rithmatists duel with living two-dimensional chalk drawings — and hold the line at Nebrask against the wild chalklings.',
-    x: 480, y: 1560, r: 40,
+    x: 1080, y: 1300, r: 40,
     colors: { base: '#7a5a3a', mid: '#9a744a', glow: '#c89a66', accent: '#f0d0a0 ' },
     shards: [],
     magic: [
@@ -300,7 +300,7 @@ export const PLANETS = [
     tagline: 'The Wheel weaves as the Wheel wills',
     description:
       'Brandon Sanderson completed Robert Jordan\'s epic after his passing, writing the final three volumes of the Last Battle between the Dragon Reborn and the Dark One.',
-    x: 1180, y: 1600, r: 48,
+    x: 1450, y: 1230, r: 48,
     colors: { base: '#3a7a5a', mid: '#4a9a6e', glow: '#66c890', accent: '#a0f0c8' },
     shards: [],
     magic: [

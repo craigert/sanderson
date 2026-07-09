@@ -7,7 +7,10 @@
         </router-link>
       </div>
       <div class="topbar-actions">
-        <button class="pill pill-btn palette-launch" @click="openPalette">&#9906; <kbd>⌘K</kbd></button>
+        <button class="pill pill-btn palette-launch" @click="openPalette">
+          <svg class="ico-search" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.6" fill="none" stroke="currentColor" stroke-width="1.7" /><line x1="10.2" y1="10.2" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+          <kbd>⌘K</kbd>
+        </button>
         <button class="pill pill-btn" @click="toggleTheme">{{ themeLabel }}</button>
       </div>
     </div>

@@ -3,7 +3,7 @@
     <div v-if="paletteOpen" class="palette-overlay" @click="close">
       <div class="palette" role="dialog" aria-label="Search the Cosmere" @click.stop>
         <div class="palette-input-row">
-          <span class="palette-icon" aria-hidden="true">&#9109;</span>
+          <svg class="palette-icon ico-search" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6" /><line x1="10.2" y1="10.2" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
           <input
             ref="inputEl"
             v-model="query"
