@@ -243,6 +243,23 @@ export const PLANETS = [
     bookTitles: ['White Sand'],
   },
 
+  {
+    id: 'fires-world',
+    universe: 'cosmere',
+    name: 'An Unnamed World',
+    system: 'Hoid\'s Travails',
+    tagline: 'A fire-scoured world, charted only by Hoid',
+    description:
+      'A minor world of the Cosmere, unnamed in canon and known only through Hoid\'s account in The Fires of December. Its red skies and stranger denizens remain, for now, a mystery.',
+    x: 640, y: 610, r: 26,
+    colors: { base: '#a83a32', mid: '#c85040', glow: '#ff7a5a', accent: '#ffb0a0' },
+    shards: [],
+    magic: [
+      { name: 'Unknown', blurb: 'Little of this world\'s Investiture has been revealed — its secrets wait in The Fires of December.' },
+    ],
+    seriesIds: [12],
+  },
+
   // ─── Beyond the Cosmere ────────────────────────────────
   {
     id: 'detritus',
