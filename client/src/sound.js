@@ -135,31 +135,58 @@ export function playPageTurn() {
   src.start(t);
 }
 
+// A satisfying mechanical "ka-CHUNK" passport stamp, in four layers.
 export function playStamp() {
   if (!soundEnabled.value) return;
   const c = ensureCtx();
   if (!c) return;
   const t = c.currentTime;
-  // Low wax-seal thud
+
+  // 1) Sharp contact click — the stamp meeting the page
+  const clickDur = 0.03;
+  const cb = c.createBuffer(1, Math.floor(c.sampleRate * clickDur), c.sampleRate);
+  const cd = cb.getChannelData(0);
+  for (let i = 0; i < cd.length; i++) cd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / cd.length, 2);
+  const cs = c.createBufferSource(); cs.buffer = cb;
+  const chp = c.createBiquadFilter(); chp.type = 'highpass'; chp.frequency.value = 1800;
+  const cg = c.createGain(); cg.gain.value = 0.16;
+  cs.connect(chp); chp.connect(cg); cg.connect(c.destination); cs.start(t);
+
+  // 2) Deep thunk — the impact body
   const o = c.createOscillator(); o.type = 'sine';
-  o.frequency.setValueAtTime(170, t);
-  o.frequency.exponentialRampToValueAtTime(58, t + 0.13);
+  o.frequency.setValueAtTime(200, t);
+  o.frequency.exponentialRampToValueAtTime(46, t + 0.14);
   const g = c.createGain();
   g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(0.28, t + 0.012);
-  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+  g.gain.exponentialRampToValueAtTime(0.34, t + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
   o.connect(g); g.connect(c.destination);
-  o.start(t); o.stop(t + 0.3);
-  // Crisp press transient
-  const nd = 0.05;
-  const nb = c.createBuffer(1, Math.floor(c.sampleRate * nd), c.sampleRate);
-  const d = nb.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
-  const ns = c.createBufferSource(); ns.buffer = nb;
-  const nf = c.createBiquadFilter(); nf.type = 'highpass'; nf.frequency.value = 2200;
-  const ng = c.createGain(); ng.gain.value = 0.09;
-  ns.connect(nf); nf.connect(ng); ng.connect(c.destination); ns.start(t);
-  vibrate(28);
+  o.start(t); o.stop(t + 0.34);
+
+  // 3) Woody mid knock — the 'chunk'
+  const w = c.createOscillator(); w.type = 'triangle';
+  w.frequency.setValueAtTime(330, t);
+  w.frequency.exponentialRampToValueAtTime(150, t + 0.07);
+  const wf = c.createBiquadFilter(); wf.type = 'bandpass'; wf.frequency.value = 420; wf.Q.value = 2;
+  const wg = c.createGain();
+  wg.gain.setValueAtTime(0.0001, t);
+  wg.gain.exponentialRampToValueAtTime(0.17, t + 0.01);
+  wg.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+  w.connect(wf); wf.connect(wg); wg.connect(c.destination);
+  w.start(t); w.stop(t + 0.14);
+
+  // 4) Faint spring rattle — the mechanism releasing
+  const s = c.createOscillator(); s.type = 'square';
+  s.frequency.setValueAtTime(520, t + 0.045);
+  s.frequency.exponentialRampToValueAtTime(920, t + 0.16);
+  const sg = c.createGain();
+  sg.gain.setValueAtTime(0.0001, t + 0.045);
+  sg.gain.exponentialRampToValueAtTime(0.028, t + 0.065);
+  sg.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+  s.connect(sg); sg.connect(c.destination);
+  s.start(t + 0.045); s.stop(t + 0.2);
+
+  vibrate([12, 25, 45]); // a press then a firm thunk
 }
 
 // Ascending discovery chime (finding Hoid)

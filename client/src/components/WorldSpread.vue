@@ -2,6 +2,7 @@
   <div class="spread-overlay" @click="$emit('close')">
     <div
       class="spread"
+      :class="{ jolt: stamping }"
       role="dialog"
       :aria-label="planet.name + ' — world spread'"
       ref="spreadEl"
@@ -35,10 +36,21 @@
         <button
           class="stamp-btn"
           :class="{ stamped: visited }"
-          @click="$emit('toggle-visited')"
+          @click="onStamp"
         >
           {{ visited ? 'STAMPED — SEEN THIS WORLD' : 'STAMP MY PASSPORT' }}
         </button>
+
+        <!-- The passport stamp itself — slams onto the page when you stamp -->
+        <div v-if="visited" class="passport-stamp" :class="{ slam: stamping }" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="55" class="ps-ring" />
+            <circle cx="60" cy="60" r="48" class="ps-ring thin" />
+            <text x="60" y="41" class="ps-top">&#10022; VISITED &#10022;</text>
+            <text x="60" y="69" class="ps-name" textLength="86" lengthAdjust="spacingAndGlyphs">{{ planet.name.toUpperCase() }}</text>
+            <text x="60" y="88" class="ps-sub">THE COSMERE</text>
+          </svg>
+        </div>
       </div>
 
       <!-- Right page: the books -->
@@ -96,10 +108,24 @@ const props = defineProps({
   visited: { type: Boolean, default: false },
 });
 
-defineEmits(['close', 'toggle-visited']);
+const emit = defineEmits(['close', 'toggle-visited']);
 
 const spreadEl = ref(null);
 const failedCovers = reactive({});
+
+// Passport stamp: on stamping a fresh world, play the slam animation. (The
+// parent handles the sound + haptic when it records the visit.)
+const stamping = ref(false);
+let stampTimer = null;
+function onStamp() {
+  const becoming = !props.visited;
+  emit('toggle-visited');
+  if (becoming) {
+    stamping.value = true;
+    if (stampTimer) clearTimeout(stampTimer);
+    stampTimer = setTimeout(() => { stamping.value = false; }, 700);
+  }
+}
 
 // Snapshot which books were new when this spread opened, so the NEW tags stay
 // put for this viewing, then mark them seen (clearing the map bubble).

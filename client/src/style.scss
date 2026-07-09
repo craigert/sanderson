@@ -1409,7 +1409,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
 }
 
-.spread-left { border-right: 1px solid var(--rule); }
+.spread-left { border-right: 1px solid var(--rule); position: relative; }
 .spread-right { padding: 30px 34px 26px 30px; }
 
 .spread-system {
@@ -1489,6 +1489,53 @@ a { color: inherit; text-decoration: none; }
     background: var(--seal);
     color: #f5ecd2;
   }
+}
+
+// The passport stamp seal that slams onto the page
+.passport-stamp {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  width: 116px;
+  height: 116px;
+  transform: rotate(-13deg);
+  transform-origin: center;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.82;
+
+  svg { width: 100%; height: 100%; overflow: visible; }
+
+  text {
+    fill: var(--seal);
+    font-family: $mono;
+    text-anchor: middle;
+    font-weight: 700;
+  }
+
+  .ps-ring { fill: none; stroke: var(--seal); stroke-width: 2.4; }
+  .ps-ring.thin { stroke-width: 1; }
+  .ps-top { font-size: 11px; letter-spacing: 0.14em; }
+  .ps-name { font-size: 13px; letter-spacing: 0.04em; }
+  .ps-sub { font-size: 7.5px; letter-spacing: 0.22em; }
+
+  &.slam { animation: stampSlam 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.25); }
+}
+
+@keyframes stampSlam {
+  0% { transform: rotate(-13deg) scale(2.7); opacity: 0; }
+  50% { transform: rotate(-13deg) scale(0.82); opacity: 0.92; }
+  72% { transform: rotate(-13deg) scale(1.09); opacity: 0.82; }
+  100% { transform: rotate(-13deg) scale(1); opacity: 0.82; }
+}
+
+// The page recoils when the stamp lands
+.spread.jolt .spread-left { animation: pageJolt 0.34s ease-out; }
+
+@keyframes pageJolt {
+  0% { transform: translateY(0); }
+  28% { transform: translateY(2.5px); }
+  100% { transform: translateY(0); }
 }
 
 .spread-books {
@@ -2157,6 +2204,7 @@ a { color: inherit; text-decoration: none; }
   .life-shades .shade { animation: none !important; opacity: 0 !important; }
   .life-embers .ember { animation: none !important; opacity: 0 !important; }
   .world-new-pulse { animation: none !important; opacity: 0 !important; }
+  .passport-stamp.slam, .spread.jolt .spread-left { animation: none !important; }
   .spread { animation: none !important; }
   .book-page { animation: none !important; }
   html { scroll-behavior: auto; }
