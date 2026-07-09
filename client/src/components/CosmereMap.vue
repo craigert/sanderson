@@ -77,6 +77,16 @@
             <stop offset="78%" stop-color="#ff8a9a" stop-opacity="0.75" />
             <stop offset="100%" stop-color="#e0607a" stop-opacity="0" />
           </linearGradient>
+          <!-- Subtle sphere lighting: gentle directional shadow + soft glint -->
+          <radialGradient id="sphere-shade" cx="35%" cy="32%" r="82%">
+            <stop offset="0%" stop-color="#000" stop-opacity="0" />
+            <stop offset="64%" stop-color="#000" stop-opacity="0" />
+            <stop offset="100%" stop-color="#0a0710" stop-opacity="0.3" />
+          </radialGradient>
+          <radialGradient id="sphere-glint" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+          </radialGradient>
           <filter id="bloom" x="-120%" y="-120%" width="340%" height="340%">
             <feGaussianBlur stdDeviation="22" />
           </filter>
@@ -197,6 +207,9 @@
             <circle :r="w.rOuter" class="world-outer" />
             <circle :r="w.rMid" class="world-mid" stroke-dasharray="3 3" />
             <circle :r="w.r" :fill="w.fill" class="world-core" />
+            <!-- Subtle sphere lighting -->
+            <circle :r="w.r" class="world-shade" />
+            <ellipse class="world-glint" :cx="-w.r * 0.3" :cy="-w.r * 0.32" :rx="w.r * 0.36" :ry="w.r * 0.27" />
 
             <!-- Living-world ambient effects -->
             <template v-if="w.id === 'roshar'">
