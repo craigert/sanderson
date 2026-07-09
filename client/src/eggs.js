@@ -13,15 +13,18 @@ export function unlockSecret() {
 }
 
 // ── Hoid's hiding spot: fixed for the session, fresh each new one ──
-// Scattered widely across the firmament — in the gaps between worlds and out
-// in the empty dark — so he's genuinely a find.
+// A proper hunt: some spots camouflage him just off a world or tucked into a
+// constellation, others strand him in the empty dark. He's faint either way.
 const SPOTS = [
-  { x: 1500, y: 200 }, { x: -250, y: 300 }, { x: 640, y: -350 },
-  { x: 1650, y: 700 }, { x: 120, y: 980 }, { x: 1350, y: 980 },
-  { x: 850, y: 1120 }, { x: -400, y: 750 }, { x: 1900, y: 1100 },
-  { x: 2050, y: 400 }, { x: 500, y: 1150 }, { x: 1750, y: -150 },
-  { x: -150, y: 1200 }, { x: 1050, y: 1500 }, { x: 250, y: -400 },
-  { x: 1450, y: 1450 },
+  // nestled just beyond a world's disc/label — easy to overlook
+  { x: 965, y: 360 }, { x: 1120, y: 238 }, { x: 415, y: 622 },
+  { x: 330, y: 300 }, { x: 1520, y: 1180 }, { x: 690, y: 690 },
+  // hidden among the constellations
+  { x: 500, y: -235 }, { x: -300, y: 620 }, { x: 1960, y: 1225 },
+  // out in the open dark — the real find
+  { x: 1500, y: 700 }, { x: 150, y: 900 }, { x: 700, y: -360 },
+  { x: -260, y: 300 }, { x: 1780, y: 380 }, { x: 250, y: 1150 },
+  { x: 860, y: 1120 }, { x: -430, y: 820 }, { x: 2050, y: 760 },
 ];
 
 function pickSpot() {

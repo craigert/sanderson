@@ -291,10 +291,14 @@
             @click.stop="onFindHoid"
             @keydown.enter.prevent="onFindHoid"
           >
-            <line class="hoid-staff" x1="7" y1="-14" x2="10.5" y2="13" />
-            <circle class="hoid-staff-knob" cx="7" cy="-14" r="1.6" />
-            <path class="hoid-fig" d="M0 -13 C4 -13 6 -9 5.5 -5 C5.5 -3 7 0 7 4 L8 13 C8 15 -8 15 -8 13 L-7 4 C-7 0 -5.5 -3 -5.5 -5 C-6 -9 -4 -13 0 -13 Z" />
-            <ellipse class="hoid-face" cx="0" cy="-6.5" rx="1.9" ry="2.5" />
+            <!-- Forgiving invisible target: once the cursor is near, he reveals -->
+            <circle class="hoid-hit" r="24" />
+            <g class="hoid-body">
+              <line class="hoid-staff" x1="7" y1="-14" x2="10.5" y2="13" />
+              <circle class="hoid-staff-knob" cx="7" cy="-14" r="1.6" />
+              <path class="hoid-fig" d="M0 -13 C4 -13 6 -9 5.5 -5 C5.5 -3 7 0 7 4 L8 13 C8 15 -8 15 -8 13 L-7 4 C-7 0 -5.5 -3 -5.5 -5 C-6 -9 -4 -13 0 -13 Z" />
+              <ellipse class="hoid-face" cx="0" cy="-6.5" rx="1.9" ry="2.5" />
+            </g>
           </g>
 
           <text x="1480" y="948" text-anchor="end" class="chart-motto">here be spren, spores &amp; stranger things</text>
