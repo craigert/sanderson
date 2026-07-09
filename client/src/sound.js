@@ -19,7 +19,21 @@ function ensureCtx() {
     ctx = new AC();
   }
   if (ctx.state === 'suspended') ctx.resume();
+  loadStamp(ctx); // preload the stamp SFX once the context exists
   return ctx;
+}
+
+// Decoded one-shot stamp SFX (loaded from /audio/stamp.mp3)
+let stampBuffer = null;
+let stampLoading = null;
+function loadStamp(c) {
+  if (stampBuffer || stampLoading || !c) return;
+  stampLoading = fetch('/audio/stamp.mp3')
+    .then(r => (r.ok ? r.arrayBuffer() : Promise.reject()))
+    .then(a => c.decodeAudioData(a))
+    .then(buf => { stampBuffer = buf; })
+    .catch(() => { stampBuffer = null; }) // fall back to the synth
+    .finally(() => { stampLoading = null; });
 }
 
 export function toggleSound() {
@@ -135,12 +149,26 @@ export function playPageTurn() {
   src.start(t);
 }
 
-// A self-inking passport stamp: two woody clacks — the press-down and the
-// spring release ~85ms later — each a resonant "tonk" plus contact grit.
 export function playStamp() {
   if (!soundEnabled.value) return;
   const c = ensureCtx();
   if (!c) return;
+  vibrate([16, 45, 14]);
+  // Prefer the real recorded stamp; fall back to the synth until it loads
+  if (stampBuffer) {
+    const src = c.createBufferSource();
+    src.buffer = stampBuffer;
+    const g = c.createGain(); g.gain.value = 0.9;
+    src.connect(g); g.connect(c.destination);
+    src.start();
+    return;
+  }
+  stampSynth(c);
+}
+
+// A self-inking passport stamp: two woody clacks — the press-down and the
+// spring release ~85ms later — each a resonant "tonk" plus contact grit.
+function stampSynth(c) {
   const t0 = c.currentTime;
 
   // A short filtered-noise burst — the contact grit of an impact
@@ -171,8 +199,6 @@ export function playStamp() {
   // Clack 2 — the spring release ~85ms later: higher, shorter, sharper
   tonk(0.085, 300, 0.13, 0.05);
   burst(0.085, 0.018, 'highpass', 1600, 0, 0.1, 2.6);
-
-  vibrate([16, 45, 14]); // thunk … tick
 }
 
 // Ascending discovery chime (finding Hoid)
