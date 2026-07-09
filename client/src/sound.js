@@ -135,43 +135,44 @@ export function playPageTurn() {
   src.start(t);
 }
 
-// A firm, realistic passport stamp — a short "cha-thunk" built from impact
-// noise (no tonal boing).
+// A self-inking passport stamp: two woody clacks — the press-down and the
+// spring release ~85ms later — each a resonant "tonk" plus contact grit.
 export function playStamp() {
   if (!soundEnabled.value) return;
   const c = ensureCtx();
   if (!c) return;
-  const t = c.currentTime;
+  const t0 = c.currentTime;
 
-  // Short filtered-noise burst helper (impacts are inharmonic, not tonal)
-  function burst(dur, type, freq, q, gain, at = 0, curve = 1.6) {
+  // A short filtered-noise burst — the contact grit of an impact
+  function burst(at, dur, type, freq, q, gain, curve = 1.8) {
     const n = c.createBuffer(1, Math.max(1, Math.floor(c.sampleRate * dur)), c.sampleRate);
     const d = n.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, curve);
-    const src = c.createBufferSource(); src.buffer = n;
+    const s = c.createBufferSource(); s.buffer = n;
     const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
     const g = c.createGain(); g.gain.value = gain;
-    src.connect(f); f.connect(g); g.connect(c.destination);
-    src.start(t + at);
+    s.connect(f); f.connect(g); g.connect(c.destination); s.start(t0 + at);
+  }
+  // A quickly-damped tone — the hollow woody resonance of a knock
+  function tonk(at, freq, gain, dur) {
+    const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = freq;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t0 + at);
+    g.gain.exponentialRampToValueAtTime(gain, t0 + at + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + at + dur);
+    o.connect(g); g.connect(c.destination); o.start(t0 + at); o.stop(t0 + at + dur + 0.02);
   }
 
-  // 1) Crisp contact tap
-  burst(0.02, 'highpass', 2600, 0, 0.1, 0, 2.4);
-  // 2) The woody/rubber knock — the "chunk"
-  burst(0.07, 'bandpass', 480, 1.1, 0.24, 0.004, 1.4);
+  // Clack 1 — the press: heavy woody impact
+  tonk(0, 125, 0.3, 0.14);                 // body weight
+  tonk(0.002, 190, 0.22, 0.08);            // woody resonance
+  burst(0, 0.03, 'bandpass', 420, 2, 0.2); // contact grit
 
-  // 3) Deep body thud — weight, quick decay
-  const o = c.createOscillator(); o.type = 'sine';
-  o.frequency.setValueAtTime(140, t);
-  o.frequency.exponentialRampToValueAtTime(46, t + 0.12);
-  const g = c.createGain();
-  g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(0.3, t + 0.008);
-  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
-  o.connect(g); g.connect(c.destination);
-  o.start(t); o.stop(t + 0.22);
+  // Clack 2 — the spring release ~85ms later: higher, shorter, sharper
+  tonk(0.085, 300, 0.13, 0.05);
+  burst(0.085, 0.018, 'highpass', 1600, 0, 0.1, 2.6);
 
-  vibrate([14, 30]);
+  vibrate([16, 45, 14]); // thunk … tick
 }
 
 // Ascending discovery chime (finding Hoid)
