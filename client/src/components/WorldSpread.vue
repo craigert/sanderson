@@ -49,8 +49,8 @@
             <div v-if="veiled(book)" class="spread-book veiled" title="Hidden to avoid spoilers — this book comes later in the reading order than you've marked read">
               <div class="spread-book-cover tint veil"></div>
               <div class="spread-book-text">
-                <span class="spread-book-title">Hidden &mdash; further than you&rsquo;ve read</span>
-                <span class="spread-book-meta">{{ book.published_year }}</span>
+                <span class="spread-book-title">Beyond your voyage</span>
+                <span class="spread-book-meta">Further than you&rsquo;ve read &middot; hidden for spoilers</span>
               </div>
             </div>
             <router-link v-else :to="'/book/' + book.id" class="spread-book">
