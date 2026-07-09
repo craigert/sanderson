@@ -13,10 +13,15 @@ export function unlockSecret() {
 }
 
 // ── Hoid's hiding spot: fixed for the session, fresh each new one ──
+// Scattered widely across the firmament — in the gaps between worlds and out
+// in the empty dark — so he's genuinely a find.
 const SPOTS = [
-  { x: 1180, y: 520 }, { x: 250, y: 640 }, { x: 820, y: 250 },
-  { x: 1400, y: 820 }, { x: 520, y: 880 }, { x: 980, y: 640 },
-  { x: 1330, y: 360 }, { x: 170, y: 400 },
+  { x: 1500, y: 200 }, { x: -250, y: 300 }, { x: 640, y: -350 },
+  { x: 1650, y: 700 }, { x: 120, y: 980 }, { x: 1350, y: 980 },
+  { x: 850, y: 1120 }, { x: -400, y: 750 }, { x: 1900, y: 1100 },
+  { x: 2050, y: 400 }, { x: 500, y: 1150 }, { x: 1750, y: -150 },
+  { x: -150, y: 1200 }, { x: 1050, y: 1500 }, { x: 250, y: -400 },
+  { x: 1450, y: 1450 },
 ];
 
 function pickSpot() {

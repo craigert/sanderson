@@ -155,34 +155,35 @@ a { color: inherit; text-decoration: none; }
 }
 
 // ── Easter egg: Hoid & the Seventeenth Shard ─────────────
+// A hooded wanderer — no beacon; he blends into the chart and only glints
+// when the cursor finds him.
 .hoid {
   cursor: pointer;
   outline: none;
 }
 
-.hoid-halo {
-  fill: #ffe89a;
-  opacity: 0.1;
-  animation: hoidPulse 3.6s ease-in-out infinite;
-}
-
 .hoid-fig {
-  circle { fill: var(--ink-soft); }
-  line { stroke: var(--ink-soft); stroke-width: 1.2; stroke-linecap: round; }
-  .hoid-staff { stroke: var(--ink-mut); }
+  fill: var(--ink-soft);
+  opacity: 0.5;
+  transition: opacity 0.2s ease, filter 0.2s ease;
 }
 
-.hoid:hover .hoid-halo,
-.hoid:focus-visible .hoid-halo { opacity: 0.3; }
+.hoid-face { fill: var(--paper); opacity: 0.6; transition: opacity 0.2s ease; }
 
-@keyframes hoidPulse {
-  0%, 100% { opacity: 0.07; }
-  50% { opacity: 0.2; }
+.hoid-staff {
+  stroke: var(--ink-mut);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
 }
 
-[data-theme="dark"] .hoid-fig {
-  circle { fill: #e6d6ac; }
-  line { stroke: #e6d6ac; }
+.hoid-staff-knob { fill: var(--ink-mut); opacity: 0.5; transition: opacity 0.2s ease; }
+
+.hoid:hover, .hoid:focus-visible {
+  .hoid-fig { opacity: 1; filter: drop-shadow(0 0 4px rgba(224, 216, 106, 0.85)); }
+  .hoid-face { opacity: 0.85; }
+  .hoid-staff, .hoid-staff-knob { opacity: 1; }
 }
 
 // The revealed secret world glows gold
@@ -2036,7 +2037,6 @@ a { color: inherit; text-decoration: none; }
   .life-steel { animation: none !important; opacity: 0 !important; }
   .life-aon .aon-stroke { animation: none !important; stroke-dashoffset: 0 !important; opacity: 0.5 !important; }
   .life-spirits .spirit { animation: none !important; opacity: 0 !important; }
-  .hoid-halo { animation: none !important; opacity: 0.16 !important; }
   .world-new-pulse { animation: none !important; opacity: 0 !important; }
   .spread { animation: none !important; }
   .book-page { animation: none !important; }
