@@ -70,6 +70,13 @@
             <stop offset="68%" stop-color="#c9a84a" stop-opacity="0.03" />
             <stop offset="100%" stop-color="#c9a84a" stop-opacity="0" />
           </radialGradient>
+          <linearGradient id="scar-line" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#e0607a" stop-opacity="0" />
+            <stop offset="22%" stop-color="#ff8a9a" stop-opacity="0.75" />
+            <stop offset="50%" stop-color="#ffc0cc" stop-opacity="0.98" />
+            <stop offset="78%" stop-color="#ff8a9a" stop-opacity="0.75" />
+            <stop offset="100%" stop-color="#e0607a" stop-opacity="0" />
+          </linearGradient>
           <filter id="bloom" x="-120%" y="-120%" width="340%" height="340%">
             <feGaussianBlur stdDeviation="22" />
           </filter>
@@ -84,7 +91,7 @@
         </defs>
 
         <g :transform="`translate(${tx} ${ty}) scale(${scale})`">
-          <rect x="-2400" y="-2400" width="6400" height="5800" class="chart-paper" />
+          <rect x="-40000" y="-40000" width="80000" height="80000" class="chart-paper" />
 
           <!-- Nebulae & Milky Way (night sky depth) -->
           <g v-if="isDark" class="chart-nebulae" aria-hidden="true">
@@ -93,9 +100,6 @@
             <ellipse cx="1300" cy="760" rx="680" ry="520" fill="url(#neb-teal)" />
             <ellipse cx="900" cy="120" rx="520" ry="360" fill="url(#neb-magenta)" />
             <ellipse cx="2000" cy="520" rx="560" ry="440" fill="url(#neb-indigo)" />
-            <!-- Taln's Scar: the red rift in Roshar's sky (visual only) -->
-            <ellipse cx="1180" cy="220" rx="340" ry="46" transform="rotate(-27 1180 220)" fill="url(#neb-scar)" />
-            <ellipse cx="1150" cy="250" rx="180" ry="26" transform="rotate(-27 1150 250)" fill="url(#neb-scar)" />
           </g>
 
           <!-- Celestial graticule: bearing spokes + range rings + ecliptic -->
@@ -127,6 +131,16 @@
               </g>
               <circle v-else :cx="s.x" :cy="s.y" :r="s.r" class="star-dot" :style="twStyle(s)" />
             </template>
+          </g>
+
+          <!-- Taln's Scar: the red rift in the sky (visual flourish only) -->
+          <g class="taln-scar" aria-hidden="true" transform="translate(1080 120) rotate(-20)">
+            <ellipse class="scar-halo" cx="0" cy="0" rx="320" ry="30" fill="url(#neb-scar)" />
+            <ellipse class="scar-halo" cx="30" cy="0" rx="150" ry="18" fill="url(#neb-scar)" />
+            <path class="scar-core" d="M -290 4 Q -200 -14 -120 -2 Q -40 10 40 -5 Q 120 -16 200 -1 Q 250 6 290 -3" />
+            <circle class="scar-star" cx="-150" cy="-3" r="2.2" />
+            <circle class="scar-star" cx="30" cy="-4" r="2.7" />
+            <circle class="scar-star" cx="185" cy="-2" r="2" />
           </g>
 
           <!-- Constellations -->
