@@ -726,6 +726,67 @@ a { color: inherit; text-decoration: none; }
   stroke-width: 0.6;
 }
 
+// Sphere lighting — turns flat discs into lit spheres with an atmosphere
+.world-shade { fill: url(#sphere-shade); pointer-events: none; }
+.world-glint { fill: url(#sphere-glint); pointer-events: none; }
+.world-atmo {
+  fill: none;
+  stroke-width: 1.6;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+// ── Living worlds: per-world ambient life ────────────────
+// Threnody — cold Shades drifting up
+.life-shades .shade {
+  fill: #c2cedb;
+  opacity: 0;
+  animation-name: shadeDrift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shadeDrift {
+  0% { transform: translateY(8px); opacity: 0; }
+  30% { opacity: 0.55; }
+  100% { transform: translateY(-26px); opacity: 0; }
+}
+
+// Taldain — swirling ribbons of living sand
+.life-sand .sand-ribbon {
+  fill: none;
+  stroke: #e8c070;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.6;
+
+  &.thin { stroke-width: 1; opacity: 0.45; stroke: #f0d890; }
+}
+
+// First of the Sun — wheeling Aviar
+.life-aviar .bird {
+  fill: none;
+  stroke: #ffe0a0;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+}
+
+// The Fires world — rising embers
+.life-embers .ember {
+  fill: #ff8a3a;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px rgba(255, 130, 50, 0.85));
+  animation-name: emberRise;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes emberRise {
+  0% { transform: translateY(8px); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-28px); opacity: 0; }
+}
+
 // ── Living worlds: per-world ambient life ────────────────
 // Roshar — a highstorm arc sweeping around the planet
 .life-highstorm path {
@@ -2103,6 +2164,8 @@ a { color: inherit; text-decoration: none; }
   .life-steel { animation: none !important; opacity: 0 !important; }
   .life-aon .aon-stroke { animation: none !important; stroke-dashoffset: 0 !important; opacity: 0.5 !important; }
   .life-spirits .spirit { animation: none !important; opacity: 0 !important; }
+  .life-shades .shade { animation: none !important; opacity: 0 !important; }
+  .life-embers .ember { animation: none !important; opacity: 0 !important; }
   .world-new-pulse { animation: none !important; opacity: 0 !important; }
   .spread { animation: none !important; }
   .book-page { animation: none !important; }

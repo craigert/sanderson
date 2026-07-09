@@ -77,6 +77,16 @@
             <stop offset="78%" stop-color="#ff8a9a" stop-opacity="0.75" />
             <stop offset="100%" stop-color="#e0607a" stop-opacity="0" />
           </linearGradient>
+          <!-- Sphere lighting: directional shadow (top-left lit) + specular glint -->
+          <radialGradient id="sphere-shade" cx="34%" cy="30%" r="84%">
+            <stop offset="0%" stop-color="#000" stop-opacity="0" />
+            <stop offset="58%" stop-color="#000" stop-opacity="0" />
+            <stop offset="100%" stop-color="#050308" stop-opacity="0.55" />
+          </radialGradient>
+          <radialGradient id="sphere-glint" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55" />
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+          </radialGradient>
           <filter id="bloom" x="-120%" y="-120%" width="340%" height="340%">
             <feGaussianBlur stdDeviation="22" />
           </filter>
@@ -197,6 +207,10 @@
             <circle :r="w.rOuter" class="world-outer" />
             <circle :r="w.rMid" class="world-mid" stroke-dasharray="3 3" />
             <circle :r="w.r" :fill="w.fill" class="world-core" />
+            <!-- Sphere lighting: a directional shadow + specular glint + atmosphere -->
+            <circle :r="w.r" class="world-shade" />
+            <ellipse class="world-glint" :cx="-w.r * 0.3" :cy="-w.r * 0.32" :rx="w.r * 0.4" :ry="w.r * 0.3" />
+            <circle :r="w.r + 0.6" class="world-atmo" :style="{ stroke: w.glow }" />
 
             <!-- Living-world ambient effects -->
             <template v-if="w.id === 'roshar'">
@@ -254,6 +268,36 @@
                 <rect x="-1" y="-16" width="2" height="32" class="sun-edge" />
                 <animateTransform v-if="motionOK" attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="26s" repeatCount="indefinite" />
               </g>
+            </g>
+
+            <!-- Threnody — cold Shades drifting up from the planet -->
+            <g v-else-if="w.id === 'threnody'" class="life-shades" aria-hidden="true">
+              <ellipse v-for="(m, mi) in shadeMotes" :key="mi" :cx="m.x" cy="0" rx="1.4" :ry="m.ry" class="shade" :style="m.style" />
+            </g>
+
+            <!-- Taldain — ribbons of living sand swirling round the planet -->
+            <g v-else-if="w.id === 'taldain'" class="life-sand" aria-hidden="true">
+              <g>
+                <path :d="ringArc(w.r * 1.5, 210)" class="sand-ribbon" />
+                <animateTransform v-if="motionOK" attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite" />
+              </g>
+              <g>
+                <path :d="ringArc(w.r * 1.9, 150)" class="sand-ribbon thin" />
+                <animateTransform v-if="motionOK" attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="30s" repeatCount="indefinite" />
+              </g>
+            </g>
+
+            <!-- First of the Sun — Aviar wheeling around the isles -->
+            <g v-else-if="w.id === 'first-of-the-sun'" class="life-aviar" aria-hidden="true">
+              <g v-for="(a, ai) in aviar" :key="ai">
+                <path :d="birdPath" class="bird" :transform="`translate(${w.r * a.rad} 0) scale(${a.size})`" />
+                <animateTransform v-if="motionOK" attributeName="transform" type="rotate" :from="`${a.from} 0 0`" :to="`${a.to} 0 0`" :dur="a.dur" repeatCount="indefinite" />
+              </g>
+            </g>
+
+            <!-- Fires world — embers rising from the burning surface -->
+            <g v-else-if="w.id === 'fires-world'" class="life-embers" aria-hidden="true">
+              <circle v-for="(e, ei) in emberFlecks" :key="ei" :cx="e.x" cy="0" :r="e.r" class="ember" :style="e.style" />
             </g>
 
             <!-- Moons, orbiting their world -->
@@ -451,6 +495,40 @@ const spiritMotes = [
   { x: 7, r: 1.3, style: { animationDuration: '4.8s', animationDelay: '0.7s' } },
   { x: -4, r: 1.4, style: { animationDuration: '5.6s', animationDelay: '2.2s' } },
 ];
+
+// Threnody's Shades — cold wisps drifting upward
+const shadeMotes = [
+  { x: -9, ry: 4, style: { animationDuration: '6s', animationDelay: '0s' } },
+  { x: -2, ry: 5, style: { animationDuration: '7s', animationDelay: '1.8s' } },
+  { x: 6, ry: 4.5, style: { animationDuration: '6.4s', animationDelay: '0.9s' } },
+  { x: 11, ry: 3.5, style: { animationDuration: '7.4s', animationDelay: '3s' } },
+];
+
+// The Fires world — embers rising from the surface
+const emberFlecks = [
+  { x: -8, r: 1.3, style: { animationDuration: '3.4s', animationDelay: '0s' } },
+  { x: -2, r: 1.6, style: { animationDuration: '4s', animationDelay: '1.1s' } },
+  { x: 5, r: 1.2, style: { animationDuration: '3.6s', animationDelay: '0.5s' } },
+  { x: 10, r: 1.4, style: { animationDuration: '4.4s', animationDelay: '2s' } },
+  { x: 1, r: 1.1, style: { animationDuration: '3.1s', animationDelay: '2.6s' } },
+];
+
+// First of the Sun — Aviar wheeling on their own orbits
+const birdPath = 'M -3 0 Q -1.5 -2.6 0 -0.4 Q 1.5 -2.6 3 0';
+const aviar = [
+  { rad: 1.55, size: 1.1, dur: '9s', from: 0, to: 360 },
+  { rad: 1.9, size: 0.9, dur: '13s', from: 200, to: 560 },
+  { rad: 1.3, size: 1, dur: '7s', from: 90, to: 450 },
+];
+
+// A partial ring arc (for swirling sand ribbons), centred on the planet
+function ringArc(radius, spanDeg) {
+  const half = (spanDeg / 2) * (Math.PI / 180);
+  const x0 = (Math.cos(-half) * radius).toFixed(1), y0 = (Math.sin(-half) * radius).toFixed(1);
+  const x1 = (Math.cos(half) * radius).toFixed(1), y1 = (Math.sin(half) * radius).toFixed(1);
+  const large = spanDeg > 180 ? 1 : 0;
+  return `M ${x0} ${y0} A ${radius} ${radius} 0 ${large} 1 ${x1} ${y1}`;
+}
 
 const W = 1600;
 const H = 1000;
