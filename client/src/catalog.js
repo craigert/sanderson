@@ -162,13 +162,16 @@ export function readyToRead(bookOrId) {
   return unreadPrereqs(book).length === 0;
 }
 
-export const spoilerActive = computed(() => readBooks.value.length > 0);
+// Spoiler protection is always on. The codex starts fully hidden and a book's
+// content is revealed once YOU mark it read — so you build the codex by
+// checking off what you've actually read. (Reading order still drives the
+// "NEXT" hints via readyToRead above.)
+export const spoilerActive = computed(() => true);
 
 export function isSpoiled(bookOrId) {
-  if (readBooks.value.length === 0) return false; // no opt-in until you log a read
   const book = typeof bookOrId === 'object' && bookOrId ? bookOrId : bookById(bookOrId);
-  if (!book || isRead(book.id)) return false;
-  return unreadPrereqs(book).length > 0;
+  if (!book) return false;
+  return !isRead(book.id);
 }
 
 // ── Search ───────────────────────────────────────────────

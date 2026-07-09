@@ -21,13 +21,13 @@
 
     <div v-else-if="spoilerWall" class="book-sheet spoiler-wall">
       <div class="spoiler-wall-mark" aria-hidden="true">&#10022;</div>
-      <h2>Here be spoilers</h2>
+      <h2>Not yet in your codex</h2>
       <p>
-        In the reading order, this comes after
-        <strong>{{ neededTitles }}</strong> &mdash; which you haven&rsquo;t marked read yet. Its
-        characters, places, and revelations lie beyond your voyage.
+        You haven&rsquo;t marked <strong>{{ book.title }}</strong> as read. Its characters, places,
+        and revelations stay hidden to keep your codex spoiler-free &mdash; mark it read to add it.
       </p>
       <div class="spoiler-wall-actions">
+        <button class="pill pill-btn" @click="markReadHere">Mark as read</button>
         <button class="pill pill-btn" @click="revealed = true">Reveal anyway</button>
         <router-link to="/books" class="pill pill-btn">Back to the Library</router-link>
       </div>
@@ -142,7 +142,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { planetForBook, booksForPlanet } from '../data/cosmere.js';
 import { useTheme } from '../theme.js';
 import {
-  openPalette, loadCatalog, isSpoiled, spoilerActive, unreadPrereqs,
+  openPalette, loadCatalog, isSpoiled, spoilerActive, toggleRead,
   bookDetails, seriesById, books as catalogBooks,
 } from '../catalog.js';
 
@@ -198,12 +198,9 @@ const volLabel = computed(() => {
   return Number.isInteger(o) ? 'Book ' + o : 'Novella';
 });
 
-const neededTitles = computed(() => {
-  if (!book.value) return '';
-  const titles = unreadPrereqs(book.value).map(b => b.title);
-  if (titles.length <= 1) return titles[0] || '';
-  return titles.slice(0, -1).join(', ') + ' and ' + titles[titles.length - 1];
-});
+function markReadHere() {
+  if (book.value) toggleRead(book.value.id);
+}
 
 const TYPE_LABELS = {
   city: 'City',

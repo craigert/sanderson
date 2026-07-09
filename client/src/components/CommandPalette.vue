@@ -35,8 +35,8 @@
 
         <div class="palette-footer">
           <span class="palette-status">
-            Spoiler-safe: <strong>{{ readCount ? 'on' : 'off' }}</strong>
-            <span class="palette-status-hint">&middot; hides what&rsquo;s ahead in series you&rsquo;re reading</span>
+            Spoiler-safe: <strong>on</strong>
+            <span class="palette-status-hint">&middot; {{ readCount }} in your codex &middot; mark books read to reveal</span>
           </span>
           <span class="palette-hints"><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate &middot; <kbd>&crarr;</kbd> open</span>
         </div>
