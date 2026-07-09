@@ -2,7 +2,6 @@
   <div class="spread-overlay" @click="$emit('close')">
     <div
       class="spread"
-      :class="{ jolt: stamping }"
       role="dialog"
       :aria-label="planet.name + ' — world spread'"
       ref="spreadEl"
