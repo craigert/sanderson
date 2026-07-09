@@ -46,10 +46,10 @@
         <h3 class="spread-rule-title">Volumes Charted Here</h3>
         <div v-if="books.length" class="spread-books">
           <template v-for="book in sortedBooks" :key="book.id">
-            <div v-if="veiled(book)" class="spread-book veiled" title="Beyond your marked progress">
+            <div v-if="veiled(book)" class="spread-book veiled" title="Hidden to avoid spoilers — this book comes later in the reading order than you've marked read">
               <div class="spread-book-cover tint veil"></div>
               <div class="spread-book-text">
-                <span class="spread-book-title">Beyond your voyage</span>
+                <span class="spread-book-title">Hidden &mdash; further than you&rsquo;ve read</span>
                 <span class="spread-book-meta">{{ book.published_year }}</span>
               </div>
             </div>

@@ -558,27 +558,51 @@ a { color: inherit; text-decoration: none; }
 // Nebulae & Milky Way (rendered night-only, fills supplied via gradients)
 .chart-nebulae { pointer-events: none; }
 
-// Boundary delineating the Cosmere from the separate universes below it
+// Ornate cartouche delineating the Cosmere from the separate universes below
 .chart-boundary {
   pointer-events: none;
+
+  .boundary-field { fill: url(#cosmere-field); }
 
   .boundary-ring {
     fill: none;
     stroke: var(--rule-soft);
-    stroke-width: 1.4;
-    stroke-dasharray: 3 11;
-    opacity: 0.65;
+
+    &.outer { stroke-width: 1.6; opacity: 0.75; }
+    &.inner { stroke-width: 0.8; opacity: 0.45; }
   }
 
-  .boundary-label {
+  .boundary-tick {
+    stroke: var(--rule-soft);
+    stroke-width: 1;
+    opacity: 0.5;
+  }
+
+  .boundary-title {
     font-family: $serif;
     font-style: italic;
-    font-size: 30px;
+    font-size: 33px;
     letter-spacing: 0.05em;
     fill: var(--ink-mut);
-    opacity: 0.75;
+    opacity: 0.92;
+    // Paper halo "breaks" the ring cleanly behind the title
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 9px;
+    stroke-linejoin: round;
+  }
 
-    &.beyond { font-size: 22px; opacity: 0.6; }
+  .boundary-beyond {
+    font-family: $serif;
+    font-style: italic;
+    font-size: 22px;
+    letter-spacing: 0.08em;
+    fill: var(--ink-mut);
+    opacity: 0.72;
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 6px;
+    stroke-linejoin: round;
   }
 }
 

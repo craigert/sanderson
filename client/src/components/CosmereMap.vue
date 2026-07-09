@@ -65,6 +65,11 @@
             <stop offset="45%" stop-color="#c0405a" stop-opacity="0.28" />
             <stop offset="100%" stop-color="#c0405a" stop-opacity="0" />
           </radialGradient>
+          <radialGradient id="cosmere-field" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#c9a84a" stop-opacity="0.07" />
+            <stop offset="68%" stop-color="#c9a84a" stop-opacity="0.03" />
+            <stop offset="100%" stop-color="#c9a84a" stop-opacity="0" />
+          </radialGradient>
           <filter id="bloom" x="-120%" y="-120%" width="340%" height="340%">
             <feGaussianBlur stdDeviation="22" />
           </filter>
@@ -100,12 +105,16 @@
             <ellipse class="grat-ecliptic" :cx="CENTER.x" :cy="CENTER.y" rx="1180" ry="450" :transform="`rotate(-18 ${CENTER.x} ${CENTER.y})`" />
           </g>
 
-          <!-- Boundary of the Cosmere: everything within is one connected
-               universe; the worlds below the line are separate universes -->
+          <!-- Boundary of the Cosmere, drawn as an ornate cartographer's
+               cartouche: a graduated double ring around a faint luminous field.
+               The worlds below sit in separate universes. -->
           <g class="chart-boundary" aria-hidden="true">
-            <ellipse cx="800" cy="480" rx="770" ry="510" class="boundary-ring" />
-            <text x="800" y="-16" text-anchor="middle" class="boundary-label">The Cosmere</text>
-            <text x="875" y="1150" text-anchor="middle" class="boundary-label beyond">Beyond the Cosmere</text>
+            <ellipse :cx="COSMERE.cx" :cy="COSMERE.cy" :rx="COSMERE.rx" :ry="COSMERE.ry" class="boundary-field" />
+            <ellipse :cx="COSMERE.cx" :cy="COSMERE.cy" :rx="COSMERE.rx" :ry="COSMERE.ry" class="boundary-ring outer" />
+            <ellipse :cx="COSMERE.cx" :cy="COSMERE.cy" :rx="COSMERE.rx - 15" :ry="COSMERE.ry - 15" class="boundary-ring inner" />
+            <line v-for="(t, i) in cosmereTicks" :key="'ct' + i" :x1="t.x1" :y1="t.y1" :x2="t.x2" :y2="t.y2" class="boundary-tick" />
+            <text :x="COSMERE.cx" y="-20" text-anchor="middle" class="boundary-title">&#10022;&ensp;The Cosmere&ensp;&#10022;</text>
+            <text x="875" y="1155" text-anchor="middle" class="boundary-beyond">&#8226;&ensp;Beyond the Cosmere&ensp;&#8226;</text>
           </g>
 
           <!-- Firmament: stars marked across the chart, cartographer-style -->
@@ -525,6 +534,20 @@ const graticuleSpokes = [];
 for (let a = 0; a < 360; a += 30) {
   const rad = (a * Math.PI) / 180;
   graticuleSpokes.push({ x: CENTER.x + Math.cos(rad) * 5200, y: CENTER.y + Math.sin(rad) * 5200 });
+}
+
+// Cosmere boundary cartouche — outer ring + inward graduation ticks
+const COSMERE = { cx: 800, cy: 480, rx: 770, ry: 510 };
+const cosmereTicks = [];
+for (let a = 0; a < 360; a += 6) {
+  const rad = (a * Math.PI) / 180;
+  const co = Math.cos(rad), si = Math.sin(rad);
+  cosmereTicks.push({
+    x1: +(COSMERE.cx + co * COSMERE.rx).toFixed(1),
+    y1: +(COSMERE.cy + si * COSMERE.ry).toFixed(1),
+    x2: +(COSMERE.cx + co * (COSMERE.rx - 15)).toFixed(1),
+    y2: +(COSMERE.cy + si * (COSMERE.ry - 15)).toFixed(1),
+  });
 }
 
 // ── Constellations (invented, out in the open sky beyond the worlds) ──
