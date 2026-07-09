@@ -55,9 +55,10 @@
         </div>
       </header>
 
-      <!-- ── Codex details: always the hero above; this is spoiler-gated ── -->
+      <!-- ── Codex details: hero always shows above; these are spoiler-gated
+           only while the book is unread. Once read, they simply show. ── -->
       <button
-        v-if="characters.length || magic.length || places.length"
+        v-if="!bookRead && (characters.length || magic.length || places.length)"
         class="detail-reveal"
         :aria-expanded="detailsOpen"
         @click="toggleDetails"
@@ -65,11 +66,11 @@
         <span class="detail-reveal-caret" aria-hidden="true">{{ detailsOpen ? '▾' : '▸' }}</span>
         {{ detailsOpen ? 'Hide codex details' : 'Reveal codex details' }}
         <span class="detail-reveal-note">
-          characters &middot; magic &middot; places<template v-if="!detailsOpen && !bookRead"> — spoilers</template>
+          characters &middot; magic &middot; places<template v-if="!detailsOpen"> — spoilers</template>
         </span>
       </button>
 
-      <div v-if="detailsOpen" class="detail-sections">
+      <div v-if="bookRead || detailsOpen" class="detail-sections">
         <!-- ── Characters ── -->
         <section v-if="characters.length" class="page-section">
           <h2>Dramatis Personae</h2>
