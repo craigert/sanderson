@@ -1656,6 +1656,33 @@ a { color: inherit; text-decoration: none; }
     max-width: 560px;
     color: #d9c9a2;
   }
+
+  .read-mark {
+    align-self: flex-start;
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: $mono;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #e8d9b4;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid #4a3b28;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover { background: rgba(255, 255, 255, 0.12); }
+
+    &.read {
+      color: #cfeecd;
+      border-color: #2c8a5a;
+      background: rgba(44, 138, 90, 0.18);
+    }
+  }
 }
 
 // Section chips

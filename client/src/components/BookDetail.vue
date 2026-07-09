@@ -19,20 +19,6 @@
     <p v-if="loading" class="status-message">Consulting the archives&hellip;</p>
     <p v-else-if="error" class="status-message error">{{ error }}</p>
 
-    <div v-else-if="spoilerWall" class="book-sheet spoiler-wall">
-      <div class="spoiler-wall-mark" aria-hidden="true">&#10022;</div>
-      <h2>Not yet in your codex</h2>
-      <p>
-        You haven&rsquo;t marked <strong>{{ book.title }}</strong> as read. Its characters, places,
-        and revelations stay hidden to keep your codex spoiler-free &mdash; mark it read to add it.
-      </p>
-      <div class="spoiler-wall-actions">
-        <button class="pill pill-btn" @click="markReadHere">Mark as read</button>
-        <button class="pill pill-btn" @click="revealed = true">Reveal anyway</button>
-        <router-link to="/books" class="pill pill-btn">Back to the Library</router-link>
-      </div>
-    </div>
-
     <div v-else-if="book" class="book-sheet">
       <!-- ── Hero ── -->
       <header class="book-hero">
@@ -62,10 +48,14 @@
           <h1>{{ book.title }}</h1>
           <p v-if="planet" class="hero-tagline">{{ planet.tagline }}</p>
           <p v-if="book.synopsis" class="hero-synopsis">{{ book.synopsis }}</p>
+          <button class="read-mark" :class="{ read: bookRead }" @click="markRead">
+            <span aria-hidden="true">{{ bookRead ? '✓' : '＋' }}</span>
+            {{ bookRead ? 'In your codex' : 'Mark as read' }}
+          </button>
         </div>
       </header>
 
-      <!-- ── Collapsible codex details (kept folded to avoid spoilers) ── -->
+      <!-- ── Codex details: always the hero above; this is spoiler-gated ── -->
       <button
         v-if="characters.length || magic.length || places.length"
         class="detail-reveal"
@@ -75,7 +65,7 @@
         <span class="detail-reveal-caret" aria-hidden="true">{{ detailsOpen ? '▾' : '▸' }}</span>
         {{ detailsOpen ? 'Hide codex details' : 'Reveal codex details' }}
         <span class="detail-reveal-note">
-          characters &middot; magic &middot; places<template v-if="!detailsOpen"> — may contain spoilers</template>
+          characters &middot; magic &middot; places<template v-if="!detailsOpen && !bookRead"> — spoilers</template>
         </span>
       </button>
 
@@ -142,7 +132,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { planetForBook, booksForPlanet } from '../data/cosmere.js';
 import { useTheme } from '../theme.js';
 import {
-  openPalette, loadCatalog, isSpoiled, spoilerActive, toggleRead,
+  openPalette, loadCatalog, isRead, toggleRead,
   bookDetails, seriesById, books as catalogBooks,
 } from '../catalog.js';
 
@@ -150,14 +140,12 @@ const { toggleTheme, themeLabel } = useTheme();
 const route = useRoute();
 const router = useRouter();
 
-// Spoiler interstitial: revealed per-book for this session only
-const revealed = ref(false);
-
-// Codex details stay folded by default to avoid spoilers; remember the choice
-const detailsOpen = ref(localStorage.getItem('cosmere-details-open') === '1');
+// The hero (cover, title, blurb) always shows. Only the detail sections
+// (characters/magic/places) are spoiler-gated: open by default once you've
+// read the book, folded (but revealable) while it's still unread.
+const detailsOpen = ref(false);
 function toggleDetails() {
   detailsOpen.value = !detailsOpen.value;
-  try { localStorage.setItem('cosmere-details-open', detailsOpen.value ? '1' : '0'); } catch { /* ignore */ }
 }
 
 const book = ref(null);
@@ -185,21 +173,21 @@ const glow = computed(() => planet.value?.colors.glow || '#c9a84a');
 const siblings = computed(() => {
   if (!planet.value || !book.value) return [];
   return booksForPlanet(planet.value, allBooks.value)
-    .filter(b => b.id !== book.value.id && !(spoilerActive.value && isSpoiled(b)))
+    .filter(b => b.id !== book.value.id)
     .sort((a, b) => a.series_id - b.series_id || (a.series_order || 0) - (b.series_order || 0));
 });
 
-// Show the spoiler wall when this volume lies past the reader's marked progress
-const spoilerWall = computed(() =>
-  !!book.value && spoilerActive.value && isSpoiled(book.value) && !revealed.value
-);
 const volLabel = computed(() => {
   const o = book.value?.series_order;
   return Number.isInteger(o) ? 'Book ' + o : 'Novella';
 });
 
-function markReadHere() {
-  if (book.value) toggleRead(book.value.id);
+const bookRead = computed(() => !!book.value && isRead(book.value.id));
+
+function markRead() {
+  if (!book.value) return;
+  toggleRead(book.value.id);
+  if (isRead(book.value.id)) detailsOpen.value = true; // just added → reveal it
 }
 
 const TYPE_LABELS = {
@@ -217,7 +205,6 @@ async function load(id) {
   loading.value = true;
   error.value = null;
   coverFailed.value = false;
-  revealed.value = false;
   try {
     await loadCatalog();
     const data = bookDetails(id);
@@ -230,6 +217,7 @@ async function load(id) {
     places.value = data.places || [];
     allBooks.value = catalogBooks.value;
     seriesName.value = seriesById(data.series_id)?.name || '';
+    detailsOpen.value = isRead(data.id); // read → details open; unread → folded
   } catch (e) {
     error.value = 'The archives are unreachable. Failed to load this volume.';
   } finally {
