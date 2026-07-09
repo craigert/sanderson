@@ -77,16 +77,6 @@
             <stop offset="78%" stop-color="#ff8a9a" stop-opacity="0.75" />
             <stop offset="100%" stop-color="#e0607a" stop-opacity="0" />
           </linearGradient>
-          <!-- Sphere lighting: directional shadow (top-left lit) + specular glint -->
-          <radialGradient id="sphere-shade" cx="34%" cy="30%" r="84%">
-            <stop offset="0%" stop-color="#000" stop-opacity="0" />
-            <stop offset="58%" stop-color="#000" stop-opacity="0" />
-            <stop offset="100%" stop-color="#050308" stop-opacity="0.55" />
-          </radialGradient>
-          <radialGradient id="sphere-glint" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55" />
-            <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-          </radialGradient>
           <filter id="bloom" x="-120%" y="-120%" width="340%" height="340%">
             <feGaussianBlur stdDeviation="22" />
           </filter>
@@ -207,10 +197,6 @@
             <circle :r="w.rOuter" class="world-outer" />
             <circle :r="w.rMid" class="world-mid" stroke-dasharray="3 3" />
             <circle :r="w.r" :fill="w.fill" class="world-core" />
-            <!-- Sphere lighting: a directional shadow + specular glint + atmosphere -->
-            <circle :r="w.r" class="world-shade" />
-            <ellipse class="world-glint" :cx="-w.r * 0.3" :cy="-w.r * 0.32" :rx="w.r * 0.4" :ry="w.r * 0.3" />
-            <circle :r="w.r + 0.6" class="world-atmo" :style="{ stroke: w.glow }" />
 
             <!-- Living-world ambient effects -->
             <template v-if="w.id === 'roshar'">
