@@ -188,7 +188,8 @@ const bookRead = computed(() => !!book.value && isRead(book.value.id));
 function markRead() {
   if (!book.value) return;
   toggleRead(book.value.id);
-  if (isRead(book.value.id)) detailsOpen.value = true; // just added → reveal it
+  // Reveal on mark, re-fold on unmark
+  detailsOpen.value = isRead(book.value.id);
 }
 
 const TYPE_LABELS = {
